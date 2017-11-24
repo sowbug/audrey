@@ -1,0 +1,276 @@
+<html>
+
+<head>
+<title>The Audrey Hack</title>
+</head>
+
+<body bgcolor="#BED4C5">
+
+<font face="Verdana" SIZE="2">
+<h1><font size="2" face="Verdana"><img border="0" src="audrey_button_activated.gif" width="72" height="70">
+ How to do the hack</font></h1>
+<p align="center"><a href="owned.jpg"><img border="0" src="owned_sm.jpg" width="160" height="120"></a>
+<a href="shell_view.jpg"><img border="0" src="shell_view_sm.jpg" width="160" height="120"></a></p>
+<p>This page explains how I got a Korn shell
+running on my Audrey. It was a pain in the neck, but now the work is done and it
+ought to be easier from this point on.</p>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>Overview</b></font></p>
+<p><font size="2" face="Verdana">This is an overview of what I did:</font></p>
+<ol>
+  <li><font size="2" face="Verdana">Get an Audrey flash ROM image on disk from
+    someone who knew someone who apparently serviced Audreys, and had a Compact
+    Flash card that was used to restore Audreys to their original state. Without
+    this image, I would have probably gotten nowhere.</font></li>
+  <li><font size="2" face="Verdana">Using the QNX RTP, dump the contents of the
+    Audrey filesystem to disk.</font></li>
+  <li><font size="2" face="Verdana">Add pterm, ftp, and a clever web page to my
+    local copy of the Audrey file collection.</font></li>
+  <li><font size="2" face="Verdana">Regenerate the embedded filesystem.</font></li>
+  <li><font size="2" face="Verdana">Put the filesystem back on the Audrey image,
+    and flash it back to the Audrey.</font></li>
+  <li><font size="2" face="Verdana">Let the Audrey auto-update itself back to
+    the 1.02.08.01 final version.</font></li>
+  <li><font size="2" face="Verdana">Run the shell and explore!</font></li>
+</ol>
+<p><font face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>Detail</b></font></p>
+<p><font face="Verdana">This should be enough detail for a determined person to
+do what I did:</font></p>
+<ol>
+  <li><font face="Verdana">Get a bunch of equipment ready:<br>
+    <br>
+    At least one 32-meg CF card.<br>
+    CF-to-Type II adapter, or some way to plug your CF card into a PC. I have a
+    laptop running Linux, so I use the Type II slot on it.<br>
+    Power strip with a switch. This is important because otherwise you'll have
+    to unplug your Audrey about 3,000 times in a brief period of time, and I bet
+    it'll break if you do that.<br>
+    Null modem cable that fits the Audrey's serial port on one end, and one of
+    the serial ports on your PC.<br>
+    A PC running <a href="http://get.qnx.com"> QNX RTP</a>. It's free for
+    noncommercial use and it's a really cool OS.<br>
+    <br>
+    </font></li>
+  <li>Get an Audrey flash ROM image. For me it involved some luck.
+    Unfortunately, I can't pass it along to you. That was the one condition of
+    my receiving it. I hope you understand that I can't give it out, so please
+    don't ask -- I will ignore any e-mail that contains a request for the image.
+    But if someone else has an image and wants me to post a link to it, e-mail
+    me at the address below and I'll put the link on this page.<br>
+    <br>
+  </li>
+  <li>Break the image into its parts (I'll refer to the original file by the
+    filename audrey.cf):<br>
+    <br>
+    0x00000000 - 0x0007FFFF: audrey.boot, the QNX Neutrino microkernel plus
+    bootloader.<br>
+    0x00080000 - 0x00F3FFFF: audrey.fs, the QNX embedded filesystem containing
+    the Audrey files.<br>
+    0x00F40000 - 0x01000000: audrey.rom, the VGA bios and IPL (image program
+    loader) that's a combination of 3Com and QNX code.<br>
+    <br>
+  </li>
+  <li>Copy audrey.fs to the QNX PC and mount it:<br>
+    <br>
+    devf-ram -u2 -b5 -r -s0,16m,0,16m,128k &amp;<br>
+    dd if=/root/audrey.fs of=/dev/fs0p0<br>
+    flashctl -v -p/dev/fs0p0 -n/flash -m<br>
+    <br>
+    At this point you have the Audrey filesystem mounted at /flash on your QNX
+    PC. Copy it into a new location (so that you can manipulate it). I'll assume
+    you put it in ~/audreyfs.<br>
+    <br>
+  </li>
+  <li><font face="Verdana">Create a mkefs build file, or just use mine, which I
+    called ~/audrey.build <i>(Note: I think that this file has to be in Unix
+    text file format -- if you have carriage returns in it by editing in on
+    Windows, it'll get confused and give you stupid error messages. This cost me
+    only about a week of my life)</i>:<br>
+    <br>
+    [block_size=128K min_size=15990784 max_size=15990784 spare_blocks=1 mount=/]<br>
+    [perms=a=rwx]<br>
+    [uid=0 gid=0]<br>
+    /config=config<br>
+    [filter="flashcmp"]<br>
+    [uid=0 gid=0]<br>
+    /data=data<br>
+    [uid=500 gid=500]<br>
+    /etc=etc<br>
+    [uid=0 gid=0]<br>
+    /kojak=kojak<br>
+    [uid=500 gid=500]<br>
+    /nto=nto<br>
+    [uid=500 gid=500]<br>
+    /usr=usr<br>
+    [uid=0 gid=0]<br>
+    [type=link] /data/XML/Channels/.Channel00=/data/XML/Channels/.countertop<br>
+    [type=link] /data/XML/Channels/.Channel01=/data/XML/Channels/ABCNews<br>
+    [type=link] /data/XML/Channels/.Channel02=/data/XML/Channels/ESPN<br>
+    [type=link] /data/XML/Channels/.Channel03=/data/XML/Channels/MRSHOWBIZ<br>
+    [type=link] /data/XML/Channels/.Channel04=/data/XML/Channels/CBSMarketWatch<br>
+    [type=link] /data/XML/Channels/.Channel05=/data/XML/Channels/AccuWeather<br>
+    [type=link] /data/XML/Channels/.Channel06=/data/XML/Channels/DigitalCity<br>
+    [type=link] /data/XML/Channels/.Channel07=/data/XML/Channels/Drugstore<br>
+    [type=link] /data/XML/Channels/.Channel08=/data/XML/Channels/Food<br>
+    [type=link] /data/XML/Channels/.Channel09=/data/XML/Channels/CyberBills<br>
+    [type=link] /data/XML/Channels/.Channel10=/data/XML/Channels/.empty<br>
+    [type=link] /data/XML/Channels/.Channel11=/data/XML/Channels/.empty<br>
+    [type=link] /data/XML/Channels/.Channel12=/data/XML/Channels/.empty<br>
+    [type=link] /bin=/nto/bin<br>
+    [type=link] /data/XML/Content=/tmp/data/XML/Content<br>
+    [type=link] /data/XML/Content.new=/tmp/data/XML/Content.new<br>
+    [type=link] /dev/shmem/bootlog=/dev/null<br>
+    [type=link] /dev/snd/pcmPreferredp=/dev/snd/pcmC1D0p<br>
+    [type=link] /etc/ppp=/config<br>
+    [type=link] /etc/config/trap/audio=/dev/shmem<br>
+    [type=link] /kojak/bc/current=/kojak/bc/eng<br>
+    #[type=link] /nto/bin/cp=/proc/boot/cp<br>
+    #[type=link] /nto/bin/devf-ram=/proc/boot/devf-kojak<br>
+    [type=link] /nto/bin/devf-ram=/nto/bin/devf-kojak<br>
+    #[type=link] /nto/bin/flashlzo=/proc/boot/flashlzo<br>
+    #[type=link] /nto/bin/mkdir=/proc/boot/mkdir<br>
+    #[type=link] /nto/bin/mount=/proc/boot/mount<br>
+    [type=link] /nto/bin/pdksh=ksh<br>
+    [type=link] /nto/bin/sh=/nto/bin/ksh<br>
+    [type=link] /nto/bin/tar=/proc/boot/tar<br>
+    [type=link] /nto/bin/umount=/proc/boot/umount<br>
+    [type=link] /nto/lib/libcam.so.1=/nto/lib/libcam.so<br>
+    [type=link] /usr/lib/ldqnx.so.1=/proc/boot/libc.so.1<br>
+    [perms=a=rwxs]<br>
+    /kojak/CGI/Exec=Exec<br>
+    <br>
+    </font></li>
+  <li>For some stupid reason, I couldn't get the QNX microkernel files to mount
+    at /proc/boot, so I just copied them into my local mirror on the Audrey
+    filesystem:<br>
+    <br>
+    cd ~/audreyfs/nto/bin<br>
+    dumpifs -x -b ~/audrey.boot<br>
+    <br>
+  </li>
+  <li>Add in some new files. I chose the following:<br>
+    <br>
+    nto/photon/bin/pterm<br>
+    nto/photon/config/pterm/psh.rc<br>
+    nto/photon/config/pterm/pterm.rc<br>
+    nto/photon/.ph/pterm/pterm.rc -- I can't figure out why I had to put in two
+    copies of pterm<br>
+    nto/bin/ftp<br>
+    nto/bin/qtalk<br>
+    kojak/CGI/shellex <i>This file fell out of the sky but you can write one
+    yourself if you have a version of QNX that can compile for libc.so.1. It's
+    just a CGI binary that takes the QUERY_STRING environment variable and hands
+    it to /bin/sh. It needs to have its permissions set +s.</i><br>
+    data/XML/shell.shtml <i>This is the clever web page I talked about earlier.
+    Here's the source for it.</i><br>
+    <br>
+    &lt;html>&lt;head>&lt;title&gt;Shell&lt;/title>&lt;/head>&lt;body><br>
+    &lt;!--#exec cmd=&quot;shellex $QUERY_STRING&quot; --><br>
+    &lt;/body>&lt;/html><br>
+    <br>
+    There's a whole bunch more stuff you could conceivably put in there, but
+    unless you're concerned about inefficient use of the filesystem, this will
+    be sufficient because you can ftp the rest of the stuff you need to the
+    system.<br>
+    <br>
+  </li>
+  <li>Make the new embedded filesystem:<br>
+    <br>
+    cd ~/audreyfs<br>
+    mkefs ../audrey.build ../audrey_sowbug.fs<br>
+    <br>
+  </li>
+  <li>At this point you have an &quot;enhanced&quot; Audrey filesystem. Recreate
+    the flash image using the <a href="ehack.zip">tools</a> I wrote:<br>
+    <br>
+    cat audrey.boot audrey_sowbug.fs &gt; audrey_sowbug.img<br>
+    mkcf audrey_sowbug.img audrey_sowbug.cf 32047104<br>
+    <br>
+    <i>Note: 32047104 is the size of the CF card that I have. Find out the size
+    of yours by dd'ing the card to a file and seeing how big the file turns out
+    to be.<br>
+    <br>
+    </i></li>
+  <li>Flash the CF file to the CF card:<br>
+    <br>
+    dd if=audrey_sowbug.cf &gt; /dev/hde<br>
+    <br>
+    Note: /dev/hde is where my laptop mounts the CF card. Yours may be
+    different.<br>
+    <br>
+  </li>
+  <li>Flash the Audrey! Turn it off, put in the CF card, hold down the datebook
+    and power buttons, and turn the power back on. Follow the instructions on
+    the screen.<br>
+    <br>
+  </li>
+  <li>Get to the web browser and type in this URL:<br>
+    <br>
+    http://localhost/shell.shtml?pterm<br>
+    <br>
+    At this point, a terminal window should pop up. You now <b><i>0wN</i></b>
+    your Audrey!<br>
+  </li>
+</ol>
+<p><font face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>To do</b></font></p>
+<ul>
+  <li>My symbolic links are screwed up, and I can't see the default channel
+    page. I need to fix the audrey.build file to get this right, because ln
+    explodes when I try it in the shell on the Audrey.</li>
+  <li>Slinger, the miniature web server on the Audrey, can be configured to
+    listen on all addresses. If you're willing to deal with the security risk,
+    do this by editing this line in /config/rm-apps:<br>
+    <br>
+    rb,/kojak/kojak-slinger, -c -e -s -i 127.1<br>
+    <br>
+    to this:<br>
+    <br>
+    rb,/kojak/kojak-slinger, -c -e -s<br>
+    <br>
+  </li>
+  <li>Learn how to rebuild the QNX kernel. This seems to require some
+    information that I don't have (basically, the ELF header of the startup
+    program, and a library for at least one of the executables in the kernel).
+    It may be that I can just use the stuff included with the QNX RTP, but I'm
+    concerned that there's some interaction with the top of the ROM -- the BIOS
+    that lives there is a custom job done by 3Com, QNX, or a third party that
+    sold them the BIOS.</li>
+  <li>Rewrite the Audrey-specific drivers in the QNX kernel. If I do this and
+    solve the kernel build issues, then it'll be possible to distribute all the
+    tools to allow other people to pull their images off their Audreys. This is
+    the Holy Grail of creating a&nbsp; <b><i>completely legal</i></b>
+    independent Audrey development community, because a person will be able to
+    do everything I've listed here with nothing but legally redistributable
+    files (QNX RTP and rewritten drivers).</li>
+  <li>Add libc.so.2 to my image. This is a requirement for doing future
+    development under the QNX RTP -- presently, it's not possible to build
+    anything under that system that relies on libc.so.1 instead of libc.so.2.
+  </li>
+  <li><b><i>Get some sleep!</i></b> I have been getting about 4 hours of sleep
+    every night over the last two weeks, and working at my normal job during the
+    day. I need rest!<br>
+  </li>
+</ul>
+<p><font face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>Credits</b></font></p>
+<ul>
+  <li>Unnamed person #1, who provided me the image that got this all started.</li>
+  <li>Unnamed person #2, who came up with the idea of the shell.shtml page and
+    shellex executable. That was way cool, and I wish I could thank you in
+    person for it.&nbsp;</li>
+  <li>All the people on the <a href="http://www.linux-hacker.net/cgi-bin/UltraBoard/UltraBoard.pl">Linux
+    Hacker messageboards</a> who sent me encouraging e-mail over the last two
+    weeks. It really helped keep the fire burning when I was exhausted!&nbsp;</li>
+</ul>
+<p>&nbsp;</p>
+<hr>
+<p align="right"><i><font face="Verdana" size="2">This page is maintained by
+Sowbug &lt;mike @ this domain&gt;</font></i></p>
+
+</font>
+
+</body>
+
+</html>

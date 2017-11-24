@@ -1,0 +1,842 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0127)http://www.google.com/search?q=cache:P-TF8sjngnE:qdn.qnx.com/support/docs/neutrino_qrp/building/load_process.html+ipl+qnx&hl=en -->
+<HTML><HEAD><TITLE>Writing an IPL Program</TITLE>
+<META content="text/html; charset=windows-1252" http-equiv=Content-Type>
+<META content="MSHTML 5.00.2920.0" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff text=#000000>
+<TABLE border=1 width="100%">
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE bgColor=#ffffff border=1 cellPadding=10 cellSpacing=0 width="100%" 
+      color="#ffffff">
+        <TBODY>
+        <TR>
+          <TD><FONT color=black face=arial,sans-serif size=-1>This is <B><FONT 
+            color=#0039b6>G</FONT> <FONT color=#c41200>o</FONT> <FONT 
+            color=#f3c518>o</FONT> <FONT color=#0039b6>g</FONT> <FONT 
+            color=#30a72f>l</FONT> <FONT color=#c41200>e</FONT></B>'s <A 
+            href="http://www.google.com/help/features.html#cached"><FONT 
+            color=blue>cache</FONT></A> of <A 
+            href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/load_process.html"><FONT 
+            color=blue>http://qdn.qnx.com/support/docs/neutrino_qrp/building/load_process.html</FONT></A>.<BR><B><FONT 
+            color=#0039b6>G</FONT> <FONT color=#c41200>o</FONT> <FONT 
+            color=#f3c518>o</FONT> <FONT color=#0039b6>g</FONT> <FONT 
+            color=#30a72f>l</FONT> <FONT color=#c41200>e</FONT></B>'s cache is 
+            the snapshot that we took of the page as we crawled the web.<BR>The 
+            page may have changed since that time. Click here for the <A 
+            href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/load_process.html"><FONT 
+            color=blue>current page</FONT></A> without 
+            highlighting.</FONT><BR><BR>
+            <CENTER><FONT color=black size=-2><I>Google is not affiliated with 
+            the authors of this page nor responsible for its 
+            content.</I></FONT></CENTER></TD></TR>
+        <TR>
+          <TD>
+            <TABLE border=0 cellPadding=0 cellSpacing=0>
+              <TBODY>
+              <TR>
+                <TD><FONT color=black face=arial,sans-serif size=-1>These 
+                  search terms have been highlighted:&nbsp;</FONT></TD>
+                <TD bgColor=#ffff66><B><FONT color=black face=arial,sans-serif 
+                  size=-1>ipl&nbsp;</FONT></B></TD>
+                <TD bgColor=#a0ffff><B><FONT color=black face=arial,sans-serif 
+                  size=-1>qnx&nbsp;</FONT></B></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<HR>
+<LINK href="startup.html" rel=NEXT><LINK href="building_nto.html" rel=PREVIOUS>
+<META content="Writing an IPL Program" name=description>
+<CENTER>
+<TABLE align=center width="40%">
+  <TBODY>
+  <TR>
+    <TD align=middle vAlign=center><A 
+      href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/building_nto.html"><IMG 
+      alt=[Previous] border=0 height=41 src="" width=27></A></TD>
+    <TD align=middle vAlign=center><A 
+      href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/index.html"><IMG 
+      alt=[Contents] border=0 height=41 src="" width=47></A></TD>
+    <TD align=middle vAlign=center><A 
+      href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/keywords-all.html"><IMG 
+      alt=[Index] border=0 height=41 src="" width=47></A></TD>
+    <TD align=middle vAlign=center><A 
+      href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/startup.html"><IMG 
+      alt=[Next] border=0 height=41 src="" 
+width=27></A></TD></TR></TBODY></TABLE></CENTER>
+<HR>
+
+<H1><A name=id1>Writing an <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> Program</A></H1>
+<UL>
+  <LI><A 
+  href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/load_process.html#IPLOVER">Initial 
+  program loader (<B 
+  style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B>)</A> 
+  <LI><A 
+  href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/load_process.html#CUSTOMIPL">Customizing 
+  IPLs</A> 
+  <LI><A 
+  href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/load_process.html#IPLLIB">The 
+  <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> library</A> 
+</LI></UL>
+<H1><A name=IPLOVER>Initial program loader (<B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B>)</A></H1>
+<P>In this section, we'll examine the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> program in detail, 
+including how to customize it for your particular hardware, if required. </P>
+<H2><A name=id4>Responsibilities of the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B></A></H2>
+<P id=_kw_idx_0>The <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> 
+is responsible for: </P>
+<UL>
+  <LI>getting control at reset time or after the BIOS/ROM monitor 
+  <LI>setting up the environment so the image can start; this may include (but 
+  isn't limited to) configuring programmable chip selects, initializing the DRAM 
+  refresh controller, etc. 
+  <LI>getting the image from whatever medium it happens to be located on, if 
+  required 
+  <LI>copying the startup code to RAM, if required 
+  <LI>transferring control to the startup code. </LI></UL>
+<P id=_kw_idx_1>In general, if your embedded system has a BIOS or ROM monitor 
+program that can boot from a device, most (if not all) of these steps will 
+already be done. In that case, proceed directly to the "Warm-start <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B>" section. </P>
+<H2><A name=id6>Cold-start <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B></A></H2>
+<P id=_kw_idx_2>One of the benefits of Neutrino, especially in a cost-reduced 
+embedded system, is that you don't <EM>require</EM> a BIOS or ROM monitor 
+program. This discussion is primarily for developers who must write their own <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> program or who (for 
+whatever reason) don't wish to use the default <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> supplied by their 
+BIOS/monitor. </P>
+<P>Let's take a look at what the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> does in this case. </P>
+<P>When power is first applied to the processor (or whenever the processor is 
+reset), its registers are set to a known state and it begins executing from a 
+known memory location (the <I>reset vector</I>). </P>
+<P>Your <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> software must 
+be located at the reset vector and must be able to: </P>
+<OL>
+  <LI>Set up the processor. 
+  <LI>Load the Neutrino image from the startup program (<TT>startup-bios</TT>, 
+  <TT>startup-403evb</TT>, etc.). 
+  <LI>Transfer control to the startup. </LI></OL>
+<P>For example, on an x86 system, the reset vector is located at address 
+<TT>0xFFFFFFF0</TT>. The device that contains the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> must be installed within 
+that address range. In a typical x86 PC BIOS, the reset vector code contains a 
+<TT>JMP</TT> instruction that then branches to the code that performs 
+diagnostics, setup, and <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> functionality. </P>
+<H3><A name=id8>Getting the image</A></H3>
+<P>We have two major classifications defining where the image is located: </P>
+<UL>
+  <LI><I>linearly mapped</I>-means that the entire image is in the processor's 
+  linear address space. 
+  <LI id=_kw_idx_3><I>bank-switched</I>-indicates that the image isn't entirely 
+  addressable by the processor (e.g. bank-switched ROM, disk device, network, 
+  etc.). </LI></UL>
+<P>Note that we use the term "ROM" generically to mean any nonvolatile memory 
+device used to store the image (ROM, EPROM, flash, battery-backed SRAM, etc.). 
+</P>
+<H3><A name=id10>Linearly mapped images</A></H3>
+<P id=_kw_idx_4>For linearly mapped images, we have the following sources: </P>
+<UL>
+  <LI>ROM 
+  <LI>PC-Card (PCMCIA) (some implementations). </LI></UL>
+<H3><A name=id12>Bank-switched images</A></H3>
+<P id=_kw_idx_5>For bank-switched images, we have the following sources: </P>
+<UL>
+  <LI>PC-Card (PCMCIA) (some implementations) 
+  <LI>ROM, bank-switched 
+  <LI>Network device 
+  <LI>Serial or parallel port 
+  <LI>Disk device 
+  <LI>Other. </LI></UL>
+<H3><A name=id14>Processors &amp; configurations</A></H3>
+<P>In conjunction with the above, we have the following processors and 
+configurations: </P>
+<UL>
+  <LI>386 and higher processors, which power up in 16-bit real mode 
+  <LI>PowerPC family of processors, which power up in 32-bit real mode 
+  <LI>MIPS architecture processors, which power up with virtual addressing 
+  enabled, but mapped one-to-one. 
+  <LI>ARM family of processors, which BLAH BLAH BLAH 
+  <LI>SH4 family of processors, which BLAH BLAH BLAH </LI></UL>
+<H2><A name=id16>Warm-start <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B></A></H2>
+<P id=_kw_idx_6>If there's a BIOS or ROM monitor already installed at the reset 
+vector, then your <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> 
+code is really an extension to the BIOS or ROM monitor. The <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> doesn't get control 
+immediately after the reset, but instead gets control from the BIOS or ROM 
+monitor. </P>
+<P id=_kw_idx_7>The x86 PC BIOS allows extensions, as do various ROM monitors. 
+During the power-up memory scan, the BIOS or ROM monitor attempts to detect 
+extensions in the address space. To be recognized as an extension, the extension 
+ROM must have a well-defined <I>extension signature</I> (e.g. for a PC BIOS, 
+this is the sequence <TT>0x55</TT> and then <TT>0xAA</TT> as the first two bytes 
+of the extension ROM). The extension ROM must be prepared to receive control at 
+the <I>extension entry offset</I> (e.g. for a PC BIOS, this is an offset of 
+<TT>0x0003</TT> into the extension ROM). </P>
+<P id=_kw_idx_8>Note that this method is used by the various PC BOOTP ROMs 
+available. The ROM presents itself as an extension, and then, when control is 
+transferred to it, gets an image from the network and loads it into RAM. </P>
+<H2><A name=LOADIMG>Loading the image</A></H2>
+<P>Regardless of the processor being used, once the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code is started, it has 
+to load the image in a manner that meets the requirements of Neutrino as 
+described above. The <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> 
+code may also have to support a backup way of loading the image (e.g. an 
+<TT>.altboot</TT> in the case of a hard/floppy boot). This may also have to be 
+an automatic fallback in the case of a corrupted image. </P>
+<P>Note, however, that the amount of work your <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code has to do really 
+depends on the location of the image; there may be only a small amount of work 
+for the <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> or there may 
+be a lot. </P>
+<P>Let's look at the two classifications of image sources. </P>
+<H3><A name=id19>Linearly mapped devices</A></H3>
+<P id=_kw_idx_9>This is the simplest scenario. In this case, the entire image is 
+stored in some form of directly addressable storage - either a ROM device or a 
+form of PC-Card device that maps its entire address space into the processor's 
+address space. All that is required is to copy the startup code into RAM. This 
+is ideal for small or deeply embedded systems. </P>
+<P>Note that on x86 architectures, the device is <EM>not</EM> required to be 
+addressable within the first megabyte of memory. The startup program also 
+needn't be in the first megabyte of RAM. </P>
+<P>Note also that for PC-Card devices, some form of setup may be required before 
+the entire PC-Card device's address space will appear in the address space of 
+the processor. It's up to your <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code to perform this 
+setup operation. (We provide library routines for several standard PC-Card 
+interface chips.) </P>
+<HR>
+
+<P><IMG alt="Figure showing linearly mapped device" src=""></P>
+<HR>
+
+<P><I>Linearly mapped device.</I></P><PRE>
+</PRE>
+<H3><A name=id21>Bank-switched devices</A></H3>
+<P id=_kw_idx_10>In this scenario, the image is stored in a device that isn't 
+directly mapped into linear memory. An additional factor needs to be considered 
+here - how will your <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> 
+code get at the image stored in the device? </P>
+<P>Many types of hardware devices conform to this model: </P>
+<UL>
+  <LI>ROM 
+  <LI>Network boot 
+  <LI>Serial or parallel port 
+  <LI>Traditional disk </LI></UL>
+<P>Let's look at the common characteristics. In such systems, the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code knows how to fetch 
+data from some piece of hardware. The process is as follows: </P>
+<OL>
+  <LI>The <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> receives 
+  control. 
+  <LI>The <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> loads the 
+  image from the hardware into RAM. 
+  <LI>The <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> then 
+  transfers control to the newly loaded image. </LI></OL>
+<HR>
+
+<P><IMG alt="Figure showing bank-switched devices" src=""></P>
+<HR>
+
+<P><I>Bank-switched devices.</I></P><PRE>
+</PRE>
+<H4><A name=id23>ROM</A></H4>
+<P id=_kw_idx_11>In this scenario, a solid-state storage device (ROM, EPROM, 
+flash, etc.) contains the image, but the processor can see only a small portion 
+of the contents of the device. How is this implemented? The hardware has a small 
+window (say 32K) into the address space of the processor; additional hardware 
+registers control which portion of the device is manifested into that window. 
+</P>
+<HR>
+
+<P><IMG alt="Figure showing large storage medium mapped into window" src=""></P>
+<HR>
+
+<P><I>Large storage medium, bank-switched into a window.</I></P><PRE>
+</PRE>
+<P>In order to load the image, your <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code must know how to 
+control the hardware that maps the window. Your <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code then needs to copy 
+the image out of the window into RAM and transfer control. </P>
+<HR>
+
+<TABLE>
+  <TBODY>
+  <TR>
+    <TD><IMG alt=Note: src=""></TD>
+    <TD>If possible, avoid the use of any mapping hardware (whether 
+      custom-designed or "industry-standard") - it only serves to complicate the 
+      hardware and software designs. We strongly recommend linearly mapped 
+      devices. (Please see the appendix on <A 
+      href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/hardware.html">System 
+      Design Considerations</A> for more information.) </TD></TR></TBODY></TABLE>
+<HR>
+
+<H4><A name=id25>Network boot</A></H4>
+<P>Depending on your embedded system's requirements or on your development 
+process, you can load the image via an Ethernet network. On some embedded 
+boards, the ROM monitor contains the BOOTP code. On a PC with an ISA or PCI 
+network card, some form of boot ROM is placed into the address space of the 
+processor, where we assume the PC BIOS will transfer control to it. The BOOTP 
+code knows how to talk to the networking hardware and how to get the image from 
+a remote system. </P>
+<H4><A name=BOOTPSERVER>Using a BOOTP server</A></H4>
+<P id=_kw_idx_13>To boot a Neutrino system using BOOTP, you'll need a BOOTP ROM 
+for your Neutrino client and a BOOTP server (e.g. <TT>bootpd</TT>) for your 
+server. Since the TFTP protocol is used to move the image from the server to the 
+client, you'll also need a TFTP server - this is usually provided with a BOOTP 
+server on most systems (<B 
+style="BACKGROUND-COLOR: #a0ffff; COLOR: black">QNX</B> 4, UNIX, Windows 
+95/98/NT.) </P>
+<HR>
+
+<TABLE>
+  <TBODY>
+  <TR>
+    <TD><IMG alt=Note: src=""></TD>
+    <TD>For PC booting, we've tested Lanworks (<A 
+      href="http://www.lanworks.com/"><TT>www.lanworks.com</TT></A>) ROMs with 
+      the Win32 BOOTP server from Weird Solutions (<A 
+      href="http://www.weird-solutions.com/"><TT>www.weird-solutions.com</TT></A>) 
+      and the <B style="BACKGROUND-COLOR: #a0ffff; COLOR: black">QNX</B> <A 
+      href="http://qdn.qnx.com/support/docs/neutrino_qrp/utilities/b/bootpd.html"><TT>bootpd</TT></A> 
+      server.</TD></TR></TBODY></TABLE>
+<HR>
+
+<H4><A name=id28>Serial port</A></H4>
+<P id=_kw_idx_14>A serial port on the target can be useful during development 
+for downloading an image or as failsafe mechanism (e.g. if a checksum fails, you 
+can simply reload the image via the serial port). </P>
+<P id=_kw_idx_15>A serial loader can be built into the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code so that the code 
+can fetch the image from an external hardware port. This generally has a minimal 
+impact on the cost of an embedded system; in most cases, the serial port 
+hardware can be left off for final assembly. Evaluation boards supplied by 
+hardware chip vendors often have serial ports. We supply source code for an 
+embedded serial loader for the 8250 chip. </P>
+<P>The <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> process in 
+this case is almost identical to the one discussed above for the Network boot, 
+except that the serial port is used to fetch the image. </P>
+<H4><A name=id30>Traditional disk</A></H4>
+<P>In a traditional PC-style embedded system with a BIOS, this is the simplest 
+boot possible. The BIOS performs all the work for you - it fetches the image 
+from disk, transfers it to RAM, and starts it. </P>
+<P>On the other hand, if you don't have a BIOS but you wish to implement this 
+kind of a boot, then this method involves the most complicated processing 
+discussed so far. This is because you'll need a driver that knows how to access 
+the disk (whether it's a traditional rotating-medium hard disk or a solid-state 
+disk). Your <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code then 
+needs to look into the partition table of the device and figure out where the 
+contents of the image reside. Once that determination has been made, the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> then needs to either map 
+the image portions into a window and transfer bytes to RAM (in the case of a 
+solid-state disk) or fetch the data bytes from the disk hardware. </P>
+<H4><A name=id32>None of the above?</A></H4>
+<P>It's entirely conceivable that none of the above adequately describes your 
+particular embedded system. In that case, the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code you'll write must 
+still perform the same basic steps as described above - handle the reset vector, 
+fetch the image from some medium, and transfer control to the startup routine. 
+</P>
+<H2><A name=id34>Transferring control to the startup routine</A></H2>
+<P id=_kw_idx_16>Once the image has either been loaded into RAM or is available 
+for execution in ROM, we must transfer control to the <I>startup code</I> 
+(copied from the image to RAM). </P>
+<P>For detailed information about the different types of startup programs, see 
+the chapter on <A 
+href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/startup.html">Customizing 
+Image Startup Programs</A>. </P>
+<P>Once the startup code is off and running, the work of the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> process is done. </P>
+<H1><A name=CUSTOMIPL>Customizing IPLs</A></H1>
+<P id=_kw_idx_17>This section describes in detail the steps necessary to write 
+the <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> for an embedded 
+system that boots from ROM or Flash. </P>
+<P>Systems that boot from disk or over the network typically come with a BIOS or 
+ROM monitor, which already contains a large part of the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> within it. If your 
+embedded system fits this category, you can probably skip directly to the 
+chapter on <A 
+href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/startup.html">Customizing 
+Image Startup Programs.</A> </P>
+<P>Your <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> loader gets 
+control at reset time and performs the following three functions: </P>
+<OL>
+  <LI>Initialize hardware. 
+  <LI>Load image into RAM. 
+  <LI>Jump to the loaded image. </LI></OL>
+<H2><A name=id37>Initialize hardware</A></H2>
+<P>Basic hardware initialization is done at this time. This includes gaining 
+access to the system RAM, which may not be addressable after reset. The amount 
+of initialization done here will depend on what was done by any code before this 
+loader gained control. On some systems, the power-on-reset will point directly 
+to this code, which will have to do everything. On other systems, this loader 
+may be called by an even more primitive loader, which may have already performed 
+some of these tasks. </P>
+<P>Note that it's not necessary to initialize standard peripheral hardware such 
+as an IDE interface or the baud rate of serial ports. This will be done by the 
+OS drivers when they're started later. Technically, you need to initialize only 
+enough hardware to allow control to be transferred to the startup program in the 
+image. </P>
+<P>The startup program is written in C and is provided in full source-code 
+format. The startup code is structured in a readily customizable manner, 
+providing a simple environment for performing further initializations, such as 
+configuring option registers. </P>
+<H2><A name=id39>Loading the image into RAM</A></H2>
+<P>The <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code must 
+locate the boot image (made with the <TT>mkifs</TT> utility) and copy part or 
+all of it into memory. </P>
+<P>The loader uses information in the header to copy the <I>header</I> and 
+<I>startup</I> into RAM. The loader would be responsible for copying the entire 
+image into RAM if the image weren't located in linearly addressable memory. </P>
+<H2><A name=id41>Structure of the boot header</A></H2>
+<P id=_kw_idx_18>The boot header structure <TT>struct startup_header</TT> is 
+defined in the include file <TT>&lt;sys/startup.h&gt;</TT>. It is 256 bytes in 
+size and contains the following members, which are examined by the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> and/or startup code: 
+</P>
+<UL plain>
+  <LI><TT>unsigned long </TT><I>signature</I> 
+  <LI><TT>unsigned short</TT> <I>version</I> 
+  <LI><TT>unsigned char </TT><I>flags1</I> 
+  <LI><TT>unsigned char </TT><I>flags2</I> 
+  <LI><TT>unsigned short</TT> <I>header_size</I> 
+  <LI><TT>unsigned short</TT> <I>machine</I> 
+  <LI><TT>unsigned long </TT><I>startup_vaddr</I> 
+  <LI><TT>unsigned long </TT><I>paddr_bias</I> 
+  <LI><TT>unsigned long </TT><I>image_paddr</I> 
+  <LI><TT>unsigned long </TT><I>ram_paddr</I> 
+  <LI><TT>unsigned long </TT><I>ram_size</I> 
+  <LI><TT>unsigned long </TT><I>startup_size</I> 
+  <LI><TT>unsigned long </TT><I>stored_size</I> 
+  <LI><TT>unsigned long </TT><I>imagefs_paddr</I> 
+  <LI><TT>unsigned long </TT><I>imagefs_size</I> 
+  <LI><TT>unsigned short</TT> <I>preboot_size</I> 
+  <LI><TT>unsigned short</TT> <I>zero0</I> 
+  <LI><TT>unsigned long </TT><I>zero</I> <TT>[3]</TT> 
+  <LI><TT>unsigned long </TT><I>info</I> <TT>[48]</TT> </LI></UL>
+<P>A valid image (for bootable images) is detected by performing a checksum (via 
+the function call <I>checksum()</I>) over the entire image, as follows: </P><PRE>checksum (image_paddr, startup_size);
+checksum (image_paddr + startup_size, stored_size - startup_size);</PRE>
+<H3><A name=id43><I>signature</I></A></H3>
+<P>This is the first 32 bits in the header and always contains 
+<TT>0x00FF7EEB</TT> in native byte order. It is used to identify the header. On 
+a machine that can be either big-endian or little-endian (a <I>bi-endian</I> 
+machine, e.g. MIPS), there's typically a hardware strap that gets set on the 
+board to specify the endianness. </P>
+<H3><A name=id45><I>ram_size</I></A></H3>
+<P>The number of bytes the image will occupy when it's loaded into RAM. This 
+value is used by the startup code in the image and isn't currently needed by the 
+<B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code. This size may 
+be greater than <I>stored_size</I> if the image was compressed. It may also be 
+smaller than <I>stored_size</I> if the image is XIP. </P>
+<H3><A name=id47><I>ram_paddr</I></A></H3>
+<P>The physical address in RAM to copy the image to. You should copy 
+<I>startup_size</I> bytes worth of data. </P>
+<H3><A name=id49><I>startup_size</I></A></H3>
+<P>This is the size of the startup code. Copy this number of bytes from the 
+start of the image into RAM. Note that the startup code is never compressed, so 
+this size is true in all cases. </P>
+<H3><A name=id51><I>stored_size</I></A></H3>
+<P>This is the size of the image including the header. The <I>stored_size</I> 
+member is also used in the copy/decompress routines for non-XIP images. </P>
+<H3><A name=id53><I>flags1</I> and <I>flags2</I></A></H3>
+<P>The following flags are defined for <I>flags1</I> (<I>flags2</I> is currently 
+not used): </P>
+<DL compact>
+  <DT>STARTUP_HDR_FLAGS1_COMPRESSED 
+  <DD>The entire boot image starting directly after the header and startup is 
+  compressed using <TT>gzip</TT> compression. 
+  <DT>STARTUP_HDR_FLAGS1_BIGENDIAN 
+  <DD>The processor is big-endian. Bi-endian processors should examine this flag 
+  to see whether they should switch to big-endian (if set) or little-endian (if 
+  clear) mode. Mono-endian processors can safely ignore this flag. 
+  <DT>STARTUP_HDR_FLAGS1_VIRTUAL 
+  <DD>If this flag is set, the operating system is to run with the Memory 
+  Management Unit (MMU) enabled. 
+  <HR>
+
+  <TABLE>
+    <TBODY>
+    <TR>
+      <TD><IMG alt=Note: src=""></TD>
+      <TD>For this release of Neutrino, you should always specify a virtual 
+        system (by specifying the <TT>virtual=</TT> attribute in your buildfile, 
+        which then sets the STARTUP_HDR_FLAGS1_VIRTUAL 
+flag).</TD></TR></TBODY></TABLE>
+  <HR>
+  </DD></DL>
+<P>Note that both flag <I>flags1</I> and <I>flags2</I> are single-byte; this 
+ensures that they're endian-neutral. </P>
+<H3><A name=id55><I>version</I></A></H3>
+<P>The version of <TT>mkifs</TT> that made the image. </P>
+<H3><A name=id57><I>header_size</I></A></H3>
+<P>The size of the startup header (<TT>sizeof (struct startup_header)</TT>). 
+</P>
+<H3><A name=id59><I>machine</I></A></H3>
+<P>Machine type, from <TT>&lt;sys/elf.h&gt;</TT>. </P>
+<H3><A name=id61><I>startup_vaddr</I></A></H3>
+<P>Virtual address to transfer to after <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> is done. </P>
+<H3><A name=id63><I>paddr_bias</I></A></H3>
+<P>Value to add to physical address to get a value to put into a pointer and 
+indirect through. </P>
+<H3><A name=id65><I>image_paddr</I></A></H3>
+<P>Physical address of the image. </P>
+<H3><A name=id67><I>imagefs_paddr</I></A></H3>
+<P>Set by the <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> to the 
+physical address of the image filesystem. Used by the startup. </P>
+<H3><A name=id69><I>imagefs_size</I></A></H3>
+<P>Size of uncompressed image filesystem. </P>
+<H3><A name=id71><I>preboot_size</I></A></H3>
+<P>Contains the number of bytes from the beginning of the loaded image to the 
+startup header. Note that this value will usually be zero, indicating that 
+nothing precedes the startup portion. On an x86 with a BIOS, it will be nonzero, 
+because there's a small piece of code that gets data from the BIOS in real mode 
+and then switches into protected mode and performs the startup. </P>
+<H3><A name=id73><I>zero</I> and <I>zero0</I></A></H3>
+<P>Zero filler; reserved for future expansion. </P>
+<H3><A name=TUPLE><I>info</I></A></H3>
+<P id=_kw_idx_19>An array of <TT>startup_info*</TT> structures. This is the 
+communications area between the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> and the startup code. 
+When the <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code detects 
+various system features (amount of memory installed, current time, information 
+about the bus used on the system, etc.), it stores that information into the 
+<I>info</I> array so that the startup code can fetch it later. This saves the 
+startup code from performing the same detection logic again. </P>
+<P>Note that the <I>info</I> is declared as an array of <TT>long</TT>s - this is 
+purely to allocate the storage space. In reality, the <I>info</I> storage area 
+contains a set of structures, each beginning with this header:</P><PRE>struct startup_info_hdr {
+    unsigned short  type;
+    unsigned short  size;
+};</PRE>
+<P>The <I>type</I> member is selected from the following list:</P>
+<DL compact>
+  <DT>STARTUP_INFO_SKIP 
+  <DD>Ignore this field. If the corresponding <I>size</I> member is 0, it means 
+  that this is the end of the <I>info</I> list. 
+  <DT>STARTUP_INFO_MEM 
+  <DD>A <TT>struct startup_info_mem</TT> structure is present. 
+  <DT>STARTUP_INFO_DISK 
+  <DD>A <TT>struct startup_info_disk</TT> structure is present. 
+  <DT>STARTUP_INFO_TIME 
+  <DD>A <TT>struct startup_info_time</TT> structure is present. 
+  <DT>STARTUP_INFO_BOX 
+  <DD>A <TT>struct startup_info_box</TT> structure is present. </DD></DL>
+<P>Note that the <TT>struct startup_info_hdr</TT> header (containing the 
+<I>type</I> and <I>size</I> members) is encapsulated within each of the above 
+mentioned <TT>struct startup_info*</TT> structures as the first element. </P>
+<P>Let's look at the individual structures. </P>
+<H3><A name=id76><TT>struct startup_info_skip</TT></A></H3>
+<P id=_kw_idx_20>Contains only the header as the member <I>hdr</I>. </P>
+<H3><A name=id78><TT>struct startup_info_mem</TT></A></H3>
+<P id=_kw_idx_21>Contains the following: </P><PRE>struct startup_info_mem {
+    struct startup_info_hdr     hdr;
+    unsigned long               addr;
+    unsigned long               size;
+};</PRE>
+<P>Contains an address (<I>addr</I>) and size (<I>size</I>) pair defining a 
+chunk of memory that should be added to <TT>procnto</TT>'s free memory pool. 
+More than one <TT>struct startup_info_mem</TT> may be present to accommodate 
+systems that have free memory located in various blocks throughout the address 
+space. </P>
+<H3><A name=id80><TT>struct startup_info_disk</TT></A></H3>
+<P id=_kw_idx_22>Contains the following: </P><PRE>struct startup_info_disk {
+    struct startup_info_hdr     hdr;
+    unsigned char               drive;
+    unsigned char               zero;
+    unsigned short              heads;
+    unsigned short              cylinders;
+    unsigned short              sectors;
+    unsigned long               blocks;
+};</PRE>
+<P>Contains information about any hard disks detected (on a PC with a BIOS). The 
+members are as follows:</P>
+<DL compact>
+  <DT><I>drive</I> 
+  <DD>Drive number. 
+  <DT><I>zero</I> 
+  <DD>Reserved; must be zero. 
+  <DT><I>heads</I> 
+  <DD>Number of heads present. 
+  <DT><I>cylinders</I> 
+  <DD>Number of cylinders present. 
+  <DT><I>sectors</I> 
+  <DD>Number of sectors present. 
+  <DT><I>blocks</I> 
+  <DD>Total blocksize of device. Computed by the formula <I>heads</I> * 
+  <I>cylinders</I> * <I>sectors</I>. Note that this assumes 512 bytes per block. 
+  </DD></DL>
+<H3><A name=id82><TT>struct startup_info_time</TT></A></H3>
+<P id=_kw_idx_23>Contains the following: </P><PRE>struct startup_info_time {
+    struct startup_info_hdr     hdr;
+    unsigned long               time;
+};</PRE>
+<P>The <I>time</I> member contains the current time as the number of seconds 
+since 1970 01 01 00:00:00 GMT. </P>
+<H3><A name=id84><TT>struct startup_info_box</TT></A></H3>
+<P id=_kw_idx_24>Contains the following: </P><PRE>struct startup_info_box {
+    struct startup_info_hdr     hdr;
+    unsigned char               boxtype;
+    unsigned char               bustype;
+    unsigned char               spare [2];
+};</PRE>
+<P>Contains the <I>boxtype</I> and <I>bustype</I> information. For valid values, 
+please see the chapter on <A 
+href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/startup.html">Customizing 
+Image Startup Programs</A>. </P>
+<P>The <I>spare</I> fields are reserved and must be zero. </P>
+<H2><A name=id86>Relationship of <TT>struct startup_header</TT> fields</A></H2>
+<P id=_kw_idx_25>The following explains some of the fields used by the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> and startup for various 
+types of boot. These fields are stuffed by <TT>mkifs</TT>. </P>
+<P>Note that we've indicated which steps are performed by the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> and which are done by 
+the startup. </P>
+<H3><A name=id88>Linear ROM execute-in-place boot image</A></H3>
+<P>The following illustration shows an XIP image: </P>
+<P><IMG alt="Figure showing linear ROM XIP" src=""> </P>
+<P>Here are the steps required in the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B>: </P><PRE>checksum (<I>image_paddr</I>, <I>startup_size</I>)
+checksum (<I>image_paddr</I> + <I>startup_size</I>, <I>stored_size</I> - <I>startup_size</I>)
+copy (<I>image_paddr</I>, <I>ram_paddr</I>, <I>startup_size</I>)
+jump (<I>startup_vaddr</I>)</PRE>
+<H3><A name=id90>Linear ROM compressed boot image</A></H3>
+<P>Here's the same scenario, but with a compressed image: </P>
+<P><IMG alt="Figure showing linear ROM compressed image" src=""> </P>
+<P>Here are the steps required in the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B>: </P><PRE>checksum (<I>image_paddr</I>, <I>startup_size</I>)
+checksum (<I>image_paddr</I> + <I>startup_size</I>, <I>stored_size</I> - <I>startup_size</I>)
+copy (<I>image_paddr</I>, <I>ram_paddr</I>, <I>startup_size</I>)
+jump (<I>startup_vaddr</I>)</PRE>
+<P>And here's the step required in the startup: </P><PRE>uncompress (<I>ram_paddr</I> + <I>startup_size</I>, <I>image_paddr</I> + <I>startup_size</I>,
+            <I>stored_size</I> - <I>startup_size</I>)</PRE>
+<H3><A name=id92>ROM non-XIP image</A></H3>
+<P>In this scenario, the image doesn't execute in place: </P>
+<P><IMG alt="Figure showing ROM non-XIP image" src=""> </P>
+<P>Here are the steps required in the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B>: </P><PRE>checksum (<I>image_paddr</I>, <I>startup_size</I>)
+checksum (<I>image_paddr</I> + <I>startup_size</I>, <I>stored_size</I> - <I>startup_size</I>)
+copy (<I>image_paddr</I>, <I>ram_paddr</I>, <I>startup_size</I>)
+jump (<I>startup_vaddr</I>)</PRE>
+<P>And here's the step required in the startup: </P><PRE>copy (<I>ram_paddr</I> + <I>startup_size</I>, <I>image_paddr</I> + <I>startup_size</I>,
+      <I>stored_size</I> - <I>startup_size</I>)</PRE>
+<H3><A name=id94>Disk/network image (x86 BIOS)</A></H3>
+<P>In this case our full <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> isn't involved. An 
+existing BIOS <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> loads 
+the image into memory and transfers control to our <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B>. Since the existing <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> doesn't know where in 
+startup to jump, it always jumps to the start of the image. On the front of the 
+image we build a tiny <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> 
+that jumps to <I>startup_vaddr</I>: </P>
+<P><IMG alt="Figure showing disk/network image" src=""> </P>
+<P>Here's the step required in the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B>: </P><PRE>jump (<I>startup_vaddr</I>)</PRE>
+<H3><A name=id96>Disk/network compressed image</A></H3>
+<P>This is identical to the previous case, except that we need to decompress the 
+image in the startup: </P>
+<P><IMG alt="Figure showing disk/network compressed image" src=""> </P>
+<P>Here's the step required in the startup: </P><PRE>uncompress (<I>ram_paddr</I> + <I>startup_size</I>, <I>image_paddr</I> + <I>startup_size</I>,
+            <I>stored_size</I> - <I>startup_size</I>)</PRE>
+<P>The case of a bank-switched ROM is much like a disk/network boot except you 
+get to write the code that copies the image into RAM using the following steps 
+in the <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B>: </P><PRE>bankcopy (<I>image_paddr</I>, <I>ram_paddr</I>, <I>startup_size</I>)
+checksum (<I>image_paddr</I>, <I>startup_size</I>)
+checksum (<I>image_paddr</I> + <I>startup_size</I>, <I>stored_size</I> - <I>startup_size</I>)
+jump (<I>startup_vaddr</I>)</PRE>
+<P>Your next step is to go to the disk/network or disk/network compressed 
+scenario above. </P>
+<P>You'll need to map the physical addresses and sizes into bank-switching as 
+needed. Have fun and next time DON'T BANK-SWITCH YOUR ROM! Make it linear in the 
+address space. </P>
+<H2><A name=id98><B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> 
+Structure</A></H2>
+<P>In this section, we'll examine the structure of the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> source tree directory, 
+and also the structure of a typical <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> source file. </P>
+<H3><A name=id100><B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> 
+source directory structure</A></H3>
+<P>The Neutrino source tree structure looks like this: </P>
+<HR>
+
+<P><IMG alt="Figure showing the IPL directory structure" src=""></P>
+<HR>
+
+<P><I><B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> directory 
+structure.</I></P><PRE>
+</PRE>
+<P>The <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code is 
+structured around the following directories: </P>
+<UL plain>
+  <LI><TT>/usr/src/nto/<B 
+  style="BACKGROUND-COLOR: #ffff66; COLOR: black">ipl</B>/boards</TT> 
+  <LI><TT>/usr/src/nto/<B 
+  style="BACKGROUND-COLOR: #ffff66; COLOR: black">ipl</B>/lib</TT> </LI></UL>
+<P>The <TT>/usr/src/nto/<B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">ipl</B>/boards</TT> directory is 
+where the <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> source code 
+is stored for a particular board (e.g. <TT>/usr/src/nto/<B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">ipl</B>/boards/800fads</TT> 
+contains the source code for the Motorola MPC8xxFADS PowerPC motherboard.) </P>
+<P>The <TT>/usr/src/nto/<B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">ipl</B>/lib</TT> directory 
+contains library files and further subdirectories. The files that reside there 
+(e.g. <TT>image_scan.c</TT>) are processor-independent. Any processor-dependent 
+stuff lives in the appropriate subdirectory (e.g. <TT>x86</TT> for the x86 
+processor family). </P>
+<H3><A name=IPLCODESTRUCT><B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code structure</A></H3>
+<P>The <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code is 
+structured in two stages. The first stage is written in assembly language; it 
+sets up just enough of an environment for the second stage, written in C, to 
+run. Generally, the minimum work done here is to set up the DRAM controllers, 
+initialize the registers, and set up the chip selects so that you can address 
+your hardware. </P>
+<P id=_kw_idx_26>Generally, the <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> assembly language source 
+name begins with "<TT>init</TT>" (e.g. <TT>init8xx.s</TT> for the MPC8xxFADS 
+board); the C file is always called <TT>main.c</TT>. </P>
+<P>Once your assembly language routine has set up the minimum amount required to 
+transfer control to the C language portion, the <I>main()</I> program calls the 
+following functions in order: </P>
+<H4><A name=id103><I>image_download_8250()</I></A></H4>
+<P>This function is responsible for getting the image from wherever it may be 
+located. If the image is located in linear memory, this function isn't required 
+(the image is already "downloaded"). </P>
+<P>If you're downloading the image from a custom piece of hardware, you should 
+call your function <I>image_download_hw()</I>, where the <I>hw</I> part is 
+replaced with a descriptive name for the hardware, e.g. 
+<I>image_download_x25()</I>. </P>
+<H4><A name=id105><I>image_scan()</I></A></H4>
+<P>This function is given a start- and end-address to search for a boot image. 
+If successful, it returns a pointer to the start of the image. It is possible to 
+search within an address range that contains more than one image. If there are 
+multiple images, and one of them has a bad checksum, then the next image is 
+used. If there are multiple images with good checksums, the startup header is 
+examined, and the one with the higher version number is used. Note that the scan 
+will occur <EM>only</EM> between the specified addresses. </P>
+<H4><A name=id107><I>image_setup()</I></A></H4>
+<P>This function does the work of copying the necessary part of the image into 
+RAM. </P>
+<H4><A name=id109><I>image_start()</I></A></H4>
+<P>This function will jump to the start of the image loaded into RAM, which will 
+turn control over to the startup program. </P>
+<H3><A name=id111>An example</A></H3>
+<P>Take the <TT>main.c</TT> from the FADS8xx system:</P><PRE>#include "<B style="BACKGROUND-COLOR: #ffff66; COLOR: black">ipl</B>.h"
+
+unsigned int image;
+
+int
+main (void)
+{
+// Image is located at 0x2840000	
+// Therefore, we don't require an image_download_8250 function
+
+    image = image_scan (0x2840000, 0x2841000);
+
+// copy startup to ram, it will do any necessary work on the image
+
+    image_setup (image);
+
+// setup link register and jump to startup entry point
+
+    image_start (image);
+
+    return (0);
+}</PRE>
+<P>In this case, we have a linearly addressable flash memory device that 
+contains the image - that's why we don't need the <I>image_download_8250()</I> 
+function. </P>
+<P>The next function called is <I>image_scan()</I>, which is given a very narrow 
+range of addresses to scan for the image. We give it such a small range because 
+we <EM>know</EM> where the image is on this system - there's very little point 
+searching for it elsewhere. </P>
+<P>Then we call <I>image_setup()</I> with the address that we got from the 
+<I>image_scan()</I>. This copies the startup code to RAM. </P>
+<P>Finally, we call <I>image_start()</I> to transfer control to the startup 
+program. We don't expect this function to return - the reason we have the 
+<TT>return (0);</TT> statement is to keep the C compiler happy (otherwise it 
+would complain about "Missing return value from function main"). </P>
+<H2><A name=id113>Creating a new <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B></A></H2>
+<P>To create a new <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B>, 
+it's best to start with one we've provided that's similar to the type of CPU and 
+board you have in your design. </P>
+<P>The basic steps are: </P>
+<OL>
+  <LI>Create a new directory under <TT>/usr/src/nto/<B 
+  style="BACKGROUND-COLOR: #ffff66; COLOR: black">ipl</B>/boards</TT> with your 
+  board name. 
+  <LI>Copy all files and subdirectories from a similar board into the new 
+  directory. 
+  <LI>Modify the files as appropriate. </LI></OL>
+<H1><A name=IPLLIB>The <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> library</A></H1>
+<P>The <B style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> library 
+contains a set of routines for building a custom <B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B>. Here are the available 
+library functions (in alphabetical order): </P>
+<H3><A name=image_download_serial8250><I>image_download_serial()</I></A></H3>
+<P><TT><I>rval</I> = image_download_ser (<I>port</I>, <I>span</I>, 
+<I>address</I>)</TT> </P>
+<P>Downloads an image from the specified serial port (<I>port</I>) to the 
+specified address (<I>address</I>) using a custom protocol. On the host side, 
+this protocol is implemented via the utility <TT>sendnto</TT> (you may need a 
+null-modem cable - the protocol only uses TX, RX, and GND). The <I>span</I> 
+parameter indicates the offset from one port to the next port on the serial 
+device. </P>
+<H3><A name=image_scan><I>image_scan()</I></A></H3>
+<P><TT><I>rval</I> = image_scan (<I>start</I>, <I>end</I>)</TT> </P>
+<P>This function scans memory for a valid system image. It looks on 4K 
+boundaries for the image identifier bytes and then does a checksum on the image. 
+</P>
+<P>It scans between <I>start</I> and <I>end</I>. If a valid image is found, 
+<I>rval</I> will point at the image header. If no valid image is found, 
+<I>rval</I> is set to -1. </P>
+<P>Note that <I>image_scan()</I> will search for <EM>all</EM> images within the 
+given range, and will pick the "best" one as described above (in the <A 
+href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/load_process.html#IPLCODESTRUCT">"<B 
+style="BACKGROUND-COLOR: #ffff66; COLOR: black">IPL</B> code structure"</A> 
+section). </P>
+<H3><A name=image_setup><I>image_setup()</I></A></H3>
+<P><TT><I>rval</I> = image_setup (<I>address</I>)</TT> </P>
+<P>This function prepares an image for execution. It copies the RAM-based 
+startup code from ROM. </P>
+<P>Enter with <I>address</I> pointing to a valid image header. Exit with 
+<I>rval</I> set to 0 if no errors. Otherwise, -1. </P>
+<H3><A name=image_start><I>image_start()</I></A></H3>
+<P><TT><I>rval</I> = image_start (<I>address</I>)</TT> </P>
+<P>This function starts the image by transferring control to it. </P>
+<P>Enter with <I>address</I> pointing to a valid image header. Exit if an error 
+occurs (otherwise, this routine will never return - it will now be in the 
+startup code). </P>
+<HR>
+
+<CENTER>
+<TABLE align=center width="40%">
+  <TBODY>
+  <TR>
+    <TD align=middle vAlign=center><A 
+      href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/building_nto.html"><IMG 
+      alt=[Previous] border=0 height=41 src="" width=27></A></TD>
+    <TD align=middle vAlign=center><A 
+      href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/index.html"><IMG 
+      alt=[Contents] border=0 height=41 src="" width=47></A></TD>
+    <TD align=middle vAlign=center><A 
+      href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/keywords-all.html"><IMG 
+      alt=[Index] border=0 height=41 src="" width=47></A></TD>
+    <TD align=middle vAlign=center><A 
+      href="http://qdn.qnx.com/support/docs/neutrino_qrp/building/startup.html"><IMG 
+      alt=[Next] border=0 height=41 src="" 
+width=27></A></TD></TR></TBODY></TABLE></CENTER><!-- Generated via chap2html... --><!--   Copyright 2001 QNX Software Systems Ltd.                          --><!--   All rights reserved.                                              --><!--                                                                     --><!--   No part of this publication may be reproduced, stored in a        --><!--   retrieval system, or transmitted in any form or by any            --><!--   means, electronic, mechanical, photocopying, recording, or        --><!--   otherwise without the prior written permission of QNX             --><!--   Software Systems Ltd.                                             --><!--                                                                     --><!--   Although every precaution has been taken in the preparation       --><!--   of this document, we assume no responsibility for any errors or   --><!--   omissions, nor do we assume liability for damages resulting       --><!--   from the use of the information contained in this document.       --><!--                                                                     --><!--   QNX, Neutrino, Photon microGUI are registered trademarks, and     --><!--   PhAB, Phindows, Phinx, Voyager, JumpGate Connectivity, Slinger,   --><!--   IAT, and FLEET are trademarks, of QNX Software Systems Ltd.       --><!-- Document processed on: January 16, 2001 (10:57:39 AM) --></BODY></HTML>

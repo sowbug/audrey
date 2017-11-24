@@ -1,0 +1,51 @@
+[block_size=128K min_size=15990784 max_size=15990784 spare_blocks=1 mount=/]
+[perms=a=rwx]
+[uid=0 gid=0]
+/config=config
+[filter="flashcmp"]
+[uid=0 gid=0]
+/data=data
+[uid=500 gid=500]
+/etc=etc
+[uid=0 gid=0]
+/kojak=kojak
+[uid=500 gid=500]
+/nto=nto
+[uid=500 gid=500]
+/usr=usr
+[uid=0 gid=0]
+[type=link] /data/XML/Channels/.Channel00=/data/XML/Channels/.countertop
+[type=link] /data/XML/Channels/.Channel01=/data/XML/Channels/ABCNews
+[type=link] /data/XML/Channels/.Channel02=/data/XML/Channels/ESPN
+[type=link] /data/XML/Channels/.Channel03=/data/XML/Channels/MRSHOWBIZ
+[type=link] /data/XML/Channels/.Channel04=/data/XML/Channels/CBSMarketWatch
+[type=link] /data/XML/Channels/.Channel05=/data/XML/Channels/AccuWeather
+[type=link] /data/XML/Channels/.Channel06=/data/XML/Channels/DigitalCity
+[type=link] /data/XML/Channels/.Channel07=/data/XML/Channels/Drugstore
+[type=link] /data/XML/Channels/.Channel08=/data/XML/Channels/Food
+[type=link] /data/XML/Channels/.Channel09=/data/XML/Channels/CyberBills
+[type=link] /data/XML/Channels/.Channel10=/data/XML/Channels/.empty
+[type=link] /data/XML/Channels/.Channel11=/data/XML/Channels/.empty
+[type=link] /data/XML/Channels/.Channel12=/data/XML/Channels/.empty
+[type=link] /bin=/nto/bin
+[type=link] /data/XML/Content=/tmp/data/XML/Content
+[type=link] /data/XML/Content.new=/tmp/data/XML/Content.new
+[type=link] /dev/shmem/bootlog=/dev/null
+[type=link] /dev/snd/pcmPreferredp=/dev/snd/pcmC1D0p
+[type=link] /etc/ppp=/config
+[type=link] /etc/config/trap/audio=/dev/shmem
+[type=link] /kojak/bc/current=/kojak/bc/eng
+#[type=link] /nto/bin/cp=/proc/boot/cp
+#[type=link] /nto/bin/devf-ram=/proc/boot/devf-kojak
+[type=link] /nto/bin/devf-ram=/nto/bin/devf-kojak
+#[type=link] /nto/bin/flashlzo=/proc/boot/flashlzo
+#[type=link] /nto/bin/mkdir=/proc/boot/mkdir
+#[type=link] /nto/bin/mount=/proc/boot/mount
+[type=link] /nto/bin/pdksh=ksh
+[type=link] /nto/bin/sh=/nto/bin/ksh
+[type=link] /nto/bin/tar=/proc/boot/tar
+[type=link] /nto/bin/umount=/proc/boot/umount
+[type=link] /nto/lib/libcam.so.1=/nto/lib/libcam.so
+[type=link] /usr/lib/ldqnx.so.1=/proc/boot/libc.so.1
+[perms=a=rwxs]
+/kojak/CGI/Exec=Exec

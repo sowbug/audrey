@@ -1,0 +1,559 @@
+<html>
+
+<head>
+<title>Sowbug's 3Com Audrey hacking page</title>
+</head>
+
+<body bgcolor="#BED4C5">
+
+<h1><font size="2" face="Verdana"><img border="0" src="audrey_button_activated.gif" width="72" height="70">
+ Audrey hacking</font></h1>
+<p align="right"><font size="2" face="Verdana">Also see the <a href="http://www.audreyhacking.com/">Audrey
+Hacking</a> web site!</font>
+<p><font size="2" face="Verdana">These are my experiences messing around with my
+3Com Ergo Audrey, which I bought new from someone on eBay on July 23, 2001.</font></p>
+<p align="center"><font size="2" face="Verdana"><b>Big update</b> (Monday,
+August 6, 1:18 a.m. PDT): It's hacked. It's done. <a href="hack.html">See how</a>.</font></p>
+<p align="center"><table border="2" width="50%">
+  <tr>
+    <td>
+      <p align="center"><b><font face="Verdana" size="2">Attention: I need
+      someone with an older version of the QNX development environment to
+      compile a program for me. I am unable to build anything that depends only
+      on libc.so.1 (which is the version on the Audrey). The QNX RTP that I have
+      will build only for libc.so.2. If you can help, see my e-mail
+      address at the bottom of this page! Thanks!</font></b></td>
+  </tr>
+</table>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>New stuff</b></font></p>
+<ul>
+  <li><font size="2" face="Verdana">Try this URL from the Audrey browser:
+    http://localhost/cgi-bin/GetSystemValue?Timeserver0. QNX's <a href="http://qdn.qnx.com/support/docs/tcpip50/user_guide/utils/slinger_util.html">Slinger
+    mini-web server</a> is running on the Audrey. It can't be accessed except by
+    localhost, though, so don't worry too much about security issues.</font></li>
+  <li><font size="2" face="Verdana">Want to get auto-updating to happen quickly,
+    or right now? Go here from your Audrey:<br>
+    <br>
+    http://localhost/cgi-bin/GetSystemValue?kcrontab<br>
+    <br>
+    You'll see something that you'll recognize if you're a UNIX user, but if not, look at this line:
+
+update; 53; 4; *; *; *
+
+That's what mine says. It means (I think) that checks for software updates will happen every day at 4:53 a.m. So if you're trying to trigger auto-updating, I think this just means set your Audrey clock for a few minutes before the time indicated in your Audrey's cron file, and the update should happen right away!
+    <i>Tip from scythic: hit the power button so the Audrey goes to sleep.
+    Updates don't seem to happen when the system's awake.</i></font></li>
+</ul>
+<p align="center"><table border="2">
+  <tr>
+    <td bordercolor="#000000" bgcolor="#FFFFFF">
+      <p align="center"><font size="2" face="Verdana"><b>Wanted!</b><br>
+      <i>Your help answering these questions:</i></font>
+      <ul>
+        <li><font size="2" face="Verdana">How does mkifs compute the checksums
+          that<br>
+          it builds into the IFS image?</font></li>
+        <li><font size="2" face="Verdana">Is there any way to get a flash image <b><i>off</i></b>
+          an Audrey?&nbsp;&nbsp;</font></li>
+        <li><font size="2" face="Verdana">Is there any open source for QNX
+          drivers out there?</font></li>
+        <li><font size="2" face="Verdana">What's the cheapest place to get a
+          development<br>
+          Geode board?</font></li>
+        <li><font size="2" face="Verdana">Will <a href="http://www.ubid.com/">UBid</a>
+          ever run out of <a href="http://www.ubid.com/app/search/search.asp?search=audrey">Audreys</a>?</font></li>
+        <li><font size="2" face="Verdana">Is anyone out there willing to tell me
+          campfire stories<br>
+          about the making of the Audrey? (I'll keep names<br>
+          anonymous but would really like to make a web page<br>
+          that preserves the history of the development effort.)</font></li>
+      </ul>
+    </td>
+  </tr>
+</table>
+<p><font size="2" face="Verdana">Questions that have been answered:</font></p>
+<ul>
+  <li><font size="2" face="Verdana"><i>How does flashing by serial port work?</i>
+    There's a utility in the <a href="http://get.qnx.com/">QNX RTP</a> called <a href="http://qdn.qnx.com/support/docs/neutrino_2.11_en/utilities/s/sendnto.html">sendnto</a>,
+    which seems to be the intended tool for this. However, nobody's gotten it to
+    work.</font></li>
+        <li><font size="2" face="Verdana"><i>Do you understand Marimba well enough
+          to explain it to me?</i> All answers I've gotten have been &quot;don't
+          bother.&quot; It's complicated.</font></li>
+  <li><font size="2" face="Verdana"><i>Has 3Com turned off automatic updates
+          of
+          Audrey software?</i>&nbsp;No. I have heard from several sources that
+    it will be turned off eventually, though.</font></li>
+  <li><font size="2" face="Verdana"><i>Is Audrey running QNX 4 or QNX 6?</i>
+    Kind of a nonsequitur question, but the answer is QNX6, which is made up of
+    Neutrino (kernel) and Photon (GUI).</font></li>
+  <li><font size="2" face="Verdana"><i>How many Audreys were manufactured?</i>
+    About 25,000.</font></li>
+  <li><font size="2" face="Verdana"><i>What is the format of the kojak file
+          system?</i> As far as I can tell, this is a standard QNX embedded
+    filesystem. Unfortunately, I can't get any of the QNX RTP tools to read it.
+    While that would normally make me think that the kojak file system is NOT
+    compatible with QNX, actually I can't get <b><i>any</i></b> efs to work with
+    QNX! In other words, to oversimplify, mount(mkefs(files))&nbsp;!=&nbsp;files.</font></li>
+</ul>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>Getting the Audrey filesystem off a brand-new Audrey</b></font></p>
+<p><font size="2" face="Verdana">In theory, these steps should work. I'm still
+ironing out the details.</font></p>
+<ol>
+  <li><font size="2" face="Verdana">Get the <a href="http://get.qnx.com/">QNX
+    RTP</a>. All the rest of these instructions assume you're familiar with QNX.</font></li>
+  <li><font size="2" face="Verdana">Make a basic filesystem image (an IFS) using
+    mkifs. Its size must be less than 512KB (524,288 bytes). It must be for a
+    Geode platform with no BIOS. I recommend putting tar and ftp on the image,
+    as well as all the other basic stuff you'll need to boot.</font></li>
+  <li><font size="2" face="Verdana">Generate an Audrey image using the source
+    code I wrote below, and in the dword right before the checksum, put the
+    length of the IFS (very important! The idea here is to flash just the bottom
+    part of the Audrey image). The Audrey image should end up being 32,047,104
+    bytes.</font></li>
+  <li><font size="2" face="Verdana">Put the image on a CF card, cross your
+    fingers, and get ready to call 3Com tech support and tell them your Audrey
+    is broken.</font></li>
+  <li><font size="2" face="Verdana">Flash the Audrey.</font></li>
+  <li><font size="2" face="Verdana">When the Audrey restarts, you should now be
+    in a plain old QNX command prompt. Next you want to figure out how to get
+    the top 15.5MB of the flash memory into a tar archive, which you'll ftp to a
+    PC, and then poke and prod it!</font></li>
+</ol>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>Flashing the Audrey!</b></font></p>
+<p><font size="2" face="Verdana">This is how I did it:</font></p>
+<font SIZE="2">
+<ol>
+  <li><font face="Verdana">Copy the image (</font><font size="2" face="Verdana">32,047,104
+    bytes)</font><font face="Verdana"> to my Red Hat Linux laptop.</font></li>
+  <li><font face="Verdana">Go to Fry's Electronics and get a Hitachi 32MB CF
+    card and a PC Card adapter. Note: the capacity of the CF card must match the
+    size of the image! I got lucky because mine did!</font></li>
+  <li><font face="Verdana">Put the card/adapter in my laptop.</font></li>
+  <li><font face="Verdana">dd audrey.img &gt; /dev/hde</font></li>
+  <li><font face="Verdana">Verify that it says it copied 62592 records (512 *
+    62592 = size of image = OK).</font></li>
+  <li><font face="Verdana">Unplug my Audrey (which at this point reported
+    9/26/2000, 1.00.17.01 RC8), insert CF card, hold down power/datebook buttons,
+    and plug back in.</font></li>
+  <li><font face="Verdana">See &quot;Loading from Compact Flash&quot; with
+    &quot;XLv01.12&quot; in the upper-right corner.</font></li>
+  <li><font face="Verdana">See these:<br>
+    Erasing Flash<br>
+    Writing to Flash<br>
+    Erasing Flash (takes a long time)<br>
+    Writing to Flash (takes a long time)<br>
+    Erasing Flash<br>
+    Writing to Flash<br>
+    &gt;&gt;&gt;&gt;&gt;&gt; REMOVE COMPACTFLASH CARD
+        &lt;&lt;&lt;&lt;&lt;&lt;<br>
+    &gt;&gt;&gt;&gt;&gt;&gt; REMOVE POWER CABLE &lt;&lt;&lt;&lt;&lt;&lt;</font></li>
+      <li><font face="Verdana">At this point, when the Audrey restarts, it acts like it came right
+        out of the box -- asks for my name, address, credit card number, etc.</font></li>
+</ol>
+<font face="Verdana">If I put in a garbage CF card (one that held the Audrey image but was then
+    formatted by Windows), then the results change:</font>
+    <ul>
+      <li><font face="Verdana">Holding down the power button loads the image and then boots off the
+        flash ROM.</font></li>
+      <li><font face="Verdana">Holding down the datebook button loads the image and then reports
+        &quot;FATAL: Checksum failed.&quot;</font></li>
+      <li><font face="Verdana">Holding down the datebook and power buttons loads the image and then
+        reports &quot;FATAL: Checksum failed.&quot;</font></li>
+    </ul>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>Auto-updating</b></font></p>
+<p><font face="Verdana">My Audrey updated itself! Last night it was
+    12/7/2000, and this morning (Sunday) it was 1/16/2001. I left the terminal program
+    on, and sure enough, at some time in the night it rebooted itself,
+    presumably after updating its software. So, next question: does the Marimba
+    update system (which seems to be working after all) disallow skipping
+    updates for older machines? In other words, if I have an A machine and the
+    latest update is D, can I jump straight to D or must I first update to B and
+    C?<br>
+    <br>
+    <i>Update:</i> This is getting to be like Christmas morning every
+    morning! This morning (Monday) my Audrey says it's version 1.02.04.01 RC24,
+    2/5/2001. So it looks like the answer to my ABCD question is that it has to
+    take each incremental step. Kind of like EverQuest -- what level is your
+    Audrey? I can't wait until they fix the Hotsync bug (I can't sync my Palm
+    with 700 contacts).</font></p>
+<p><font face="Verdana">This is a dump of <a href="http://3com.marimba.net/">3com.marimba.net</a>'s
+directory structure, pared down to just the interesting stuff, with some
+&quot;RC&quot; information as reported by people on the web:</font></p>
+<blockquote>
+  <pre><font face="Courier New">1.00.10.5 
+1.00.11.99 
+1.00.12.1 
+1.00.12.5 
+1.00.12.5.d 
+1.00.12.5.t99 
+1.00.13.1 
+1.00.14.0 
+1.00.16.0 
+1.00.16.03.d 
+1.00.16.3 
+1.00.16.3.d 
+1.00.16.4 
+1.00.16.4.d 
+1.00.16.5 
+1.00.16.5.d 
+1.00.17.1      RC8  09/26/2000
+1.00.17.1.d 
+1.00.18.02    ---   01/16/2001
+    1.00.18.02 - CONFIG (1 KB) 
+    1.00.18.02 - KOJAK (1 KB) 
+1.00.19.01 
+    1.00.19.01 - KOJAK (56 KB) 
+    1.00.19.01 - NTO (22 KB) 
+    1.00.19.02 - CONFIG (1 KB) 
+1.00.19.02    ---   02/26/2001
+    1.00.19.02 - Config (420 KB) 
+    1.00.19.02 - Config (1 KB) 
+    1.00.19.02 - Nto (22 KB) 
+1.01.14.0 
+1.01.15.0 
+1.01.16.0 
+1.01.23.0      RC15 12/07/2000
+1.01.23.01, 01/18/2001 
+    1.01.23.01 - CONFIG (1 KB) 
+    1.01.23.01 - KOJAK (56 KB) 
+    1.01.23.01 - NTO (22 KB) 
+1.01.25.0 
+1.02.04.0 
+1.02.04.01     RC24 02/05/2001
+    1.02.04.01 - BIOS (257 KB) 
+    1.02.04.01 - BOOTIMAGE (513 KB) 
+    1.02.04.01 - Channels (116 KB) 
+    1.02.04.01 - ChannelSelector (5 KB) 
+    1.02.04.01 - CONFIG (8 KB) 
+    1.02.04.01 - ETC (2 KB) 
+    1.02.04.01 - KOJAK (4890 KB) 
+    1.02.04.01 - NTO (3845 KB) 
+    1.02.04.01 - USR (1796 KB) 
+1.02.08.00  RC26 03/29/2001 
+    1.02.08.00 - BIOS (257 KB) 
+    1.02.08.00 - BOOTIMAGE (513 KB) 
+    1.02.08.00 - CONFIG (8 KB) 
+    1.02.08.00 - ETC (2 KB) 
+    1.02.08.00 - KOJAK (4814 KB) 
+    1.02.08.00 - NTO (3922 KB) 
+    1.02.08.00 - USR (1796 KB) 
+1.02.08.01    FINAL 04/23/2001
+    config - 1.2.8.1 FINAL (3 KB) </font></pre>
+</blockquote>
+<p><font face="Verdana">My personal updating story went 1.00.17.1
+-&gt; 1.00.18.02 -&gt; 1.02.04.01 -&gt;
+1.02.08.00 -&gt; 1.02.08.01.</font></p>
+<p><font face="Verdana"><b><i>Tip</i></b>: If I press cancel when the Audrey starts up and
+looks for the date/time, and then enter 3:00 a.m. Pacific time, then some time
+in the next 90 minutes or so, the Audrey does a system software update. I can
+then shut it off, repeat the process (but this time entering tomorrow's date so
+it thinks it's been a day since its last update), then it continues to update. I
+can repeat this cycle and get a complete Audrey update to the final version in
+about a day's time. This is important because I have heard that 3Com/Marimba is
+shutting off the auto-updating functionality on August 6, 2001.</font></p>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+</font><font face="Verdana"><b>People who worked on the project (can't tell whether
+they work for QNX or for 3Com or someone else)</b></font></p>
+<ul>
+  <li><font face="Verdana">/home/manderson/iad.audrey/kojak/src/app/real</font></li>
+  <li><font face="Verdana">/home/jclarke/cvs/photon/devi/lib</font></li>
+  <li><font face="Verdana">/home/christian/cvs/util/flashctl/nto/x86</font></li>
+  <li><font face="Verdana">/home/dabrown/cvs/nto</font></li>
+  <li><font face="Verdana">/home/rfreeman/cvs/photon/printer/canon/nto/x86/o/phs-to-bjctA</font></li>
+  <li><font face="Verdana">/home/<a href="http://www.sulis.com/notcorellist.htm">dlevesque</a>/iad/kojak/src/app</font></li>
+  <li><font face="Verdana">/home/seanb/cvs/nto/drivers/devn/fd/x86/dll</font></li>
+  <li><font face="Verdana">/home/jboucher/cvs/photon/media/flash</font></li>
+  <li><font face="Verdana">/home/hbryson/iad/src/nto/flash/io-flash/f3s_open.c</font></li>
+</ul>
+<p><font face="Verdana"><i>Note: I think the people with /cvs in the paths are
+QNX employees. JBoucher comes up in a Google search in a QNX file called nto.pdf. Also, the two people who don't have
+/cvs in their paths do have either
+&quot;audrey&quot; or &quot;kojak&quot; in their paths, and since those are both
+3Com terms, it makes sense that they are 3Com people and the others are QNX
+people.</i></font></p>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+</font><font face="Verdana"><b>How to compute the image checksum</b></font></p>
+<p><font face="Verdana">Add up the dwords (unsigned 32-bit integers) in the part
+of the image you want to flash (e.g., all 16 megabytes). The result should equal the value stored in little-endian
+format at (CF card size - 512 + 12) in the image (right after 'KOJA' stored in little-endian
+format). Here's an incredibly simple program that does it:</font></p>
+<blockquote>
+<p><font face="Verdana"><a href="bin/win/mkcf.exe">binary for Win32</a><br>
+<a href="bin/linux_x86/mkcf">binary for x86 Linux</a><br>
+<a href="src/mkcf.tar.gz">source</a><br><br><a href="ehack.zip">Here</a> is my complete archive of working source for this project. Not a lot of
+it makes sense right now.</font></p>
+</blockquote>
+</font>
+
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+<b>Connecting the serial cable</b></font>
+
+</p>
+
+<p><font face="Verdana" size="2">This is what I saw once I plugged in my custom
+CF image (no buttons pressed at startup):</font>
+
+</p>
+
+<pre>3Com IPL
+Loading from CompactFlash
+Config : 0000848A
+Sector sz: 00000200
+Capacity : 0000F480
+Not compressed
+File size: 01000000
+max_sectors: 00008000
+Sum (calculated): 79C9BCD1
+Sum (stored): 79C9BCD1
+Uncompressed len: 01000000
+Scanning for Image at FF000000
+Image at: FF000414
+Image setup
+Starting image
+####</pre>
+
+<p><font face="Verdana" size="2">And then when I flashed the CF image to the
+SanDisk (by pressing both power and datebook buttons), <a href="upgrade_terminal.html">this
+is what I saw</a> (it's long so I put it on a separate page).</font>
+
+</p>
+
+<p><font face="Verdana" size="2">Here are some screenshots of the custom image I
+made.</font>
+
+</p>
+
+<p align="center"><a href="fullscreen.jpg"><img border="0" src="fullscreen_sm.jpg" width="235" height="201"></a>
+<a href="version_closeup.jpg"><img border="0" src="version_closeup_sm.jpg" width="229" height="124"></a>
+
+</p>
+
+<p><font face="Verdana" size="2">The only change was turning &quot;RC&quot; in
+the version string to &quot;MT&quot; -- nothing too earth-shattering, but it
+proves that it's now possible to create custom images for the Audrey.</font>
+
+</p>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+<b>Trying to make my own Marimba server</b></font>
+
+</p>
+<p><font face="Verdana" size="2">Go to <a href="http://3com.marimba.net/">http://3com.marimba.net/</a>
+and see what is there. To make a long story short, I have created a flash image
+that points to a web server on my LAN instead of that site, and so far my Audrey
+hasn't tried to talk to it. There must be something else I'm missing -- does the
+Audrey try to update itself only at night, for example? And does anyone know how
+Marimba is supposed to work so we can get stuff off the marimba.net site?</font>
+
+</p>
+
+<p><font face="Verdana" size="2"><i>Update:</i> Aha! I read some <a href="http://consumer.3com.com/ia/ergoaudrey/documents/audrey_info-10.cfm#P185_16439">documentation</a>
+on 3Com's site and learned that code updates happen only once, during the
+&quot;first download of the day.&quot; So I unplugged the device, plugged it
+back in (keep in mind it's now 3:00 a.m. so that seems like the first of the
+day), and I see this in my Apache log:</font>
+
+</p>
+
+<blockquote>
+  <p><font face="Verdana" size="2">192.168.0.6 - - [29/Jul/2001:03:02:04 -0700] "POST
+  /aaaamarimbanetplugin HTTP/1.0" 404 282<br>
+  192.168.0.6 - - [29/Jul/2001:03:02:04 -0700] "POST /aaaamarimbanetplugin?plugin
+  HTTP/1.0" 404 282</font>
+
+</p>
+
+</blockquote>
+<p><font face="Verdana" size="2">Excellent! This is indeed what I'd hard-coded
+into one of the URLs. I presume that the post information is what kind of device
+this is, so the server knows what kind of update to send back to it.</font><font face="Verdana" size="2">&nbsp;</font>
+
+</p>
+
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+<b>Image embedded in image</b></font>
+
+</p>
+<p><font face="Verdana" size="2">At 0x0000b518 in the CF image, there is a gzip
+signature: 0x1f 0x8b. Decompressing what is there gets you a file of size 1,025,152 bytes,
+which starts with the string &quot;imagefs&quot; and seems to be a RAM disk
+image of QNX. I poked around and didn't see anything particularly interesting.
+I'm pretty sure it's just QNX kernel binaries.</font>
+
+</p>
+<p><font face="Verdana" size="2">The compressed image on the CF image runs from
+0x0000b518 to 0x007b3eb (0x6fed4 or 458,452 bytes long).</font>
+
+</p>
+<p><font face="Verdana" size="2"><b><i>Update</i></b>: it turns out that the
+compressed image is actually part of a single QNX entity that starts at offset
+zero in the image. I downloaded the <a href="http://get.qnx.com/"> QNX RTP CD-ROM</a> (astonishingly cool
+user-interface and installation procedure, by the way!), and when I typed in
+dumpifs ergo.img, this is what came out:</font>
+
+</p>
+<pre><font size="2" face="Courier New">   Offset     Size  Name
+        0      414  *.boot
+      414      100  Startup-header flags1=0x5 flags2=0 paddr_bias=0
+      514     b004  startup.*
+     b518       5c  Image-header mountpoint=/
+     b574      594  Image-directory
+     ----     ----  Root-dirent
+     ----       15  nto/bin/devf-ram -&gt; /proc/boot/devf-kojak
+     ----       14  usr/lib/ldqnx.so.1 -&gt; /proc/boot/libc.so.1
+     bb08       52  proc/boot/net_up
+     c000    31edc  proc/boot/procnto
+    3e000    4c000  proc/boot/libc.so.1
+     ----        9  proc/boot/libc.so -&gt; libc.so.1
+    8a000     b000  proc/boot/devn-daisy.so
+    95000    13638  proc/boot/npm-ttcpip.so
+    a9000     e000  proc/boot/libsocket.so.1
+     ----        e  proc/boot/libsocket.so -&gt; libsocket.so.1
+    b7000    1b4c1  proc/boot/devf-kojak
+    d3000     6cc3  proc/boot/pci-bldt
+    da000     19b8  proc/boot/setup_pci
+    dc000     3f2c  proc/boot/flash
+    e0000     2c11  proc/boot/on
+    e3000     1aa0  proc/boot/cat
+    e5000     29f0  proc/boot/slay
+    e8000     66ed  proc/boot/devc-ser8250
+    ef000     27c0  proc/boot/flashctl
+    f2000     48ed  proc/boot/fesh
+    f7000     15f0  proc/boot/enable
+    f9000     1704  proc/boot/unlock
+    fb000     19c2  proc/boot/LG
+    fd000     257f  proc/boot/ln
+   100000     2363  proc/boot/rm
+   102363     3630  proc/boot/.script
+Checksums: image=0xda18d95 startup=0x7216d3db</font><font face="Verdana" size="2">  </font></pre>
+<font SIZE="2">
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>Audrey filesystem start?</b></font>
+
+</p>
+<p><font face="Verdana">At 0x00080000 (a half-meg into the image) there is what
+looks like the start of a filesystem. There's a string &quot;QSSL_F3S&quot; a
+little ways into it. In its web pages, QNX (the company) refers to itself as
+&quot;QSSL.&quot;</font></p>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>Analysis of the files in the QNX image</b></font>
+
+</p>
+<p><font face="Verdana">Most of this is obvious to any QNX developer looking at
+the file list above, but I had to figure it out on my own. The driver for the
+3Com USB Ethernet adapter is &quot;daisy,&quot; or filename devn-daisy.so. I
+don't see any OHCP or UHCP drivers for USB in the file list, so maybe the Daisy
+driver knows USB? Generally, there isn't a whole heck of a lot in the QNX system
+here!</font></p>
+<p><font face="Verdana">Kojak filesystem (devf-kojak) binary: &quot;aclrvxb:f:i:m:p:s:t:u:w:&quot;
+is probably the list of options passed to getopts. I am able to execute the
+filesystem on my QNX development system, but I haven't gotten it to do anything
+interesting yet.</font></p>
+<p><font face="Verdana">There's a string &quot;/home/hbryson/iad/src/nto/flash/io-flash/f3s_open.c&quot;
+in devf-kojak, as well as an actual &quot;QSSL_F3S&quot; tag. That maps nicely
+to the QSSL_F3S tag that's at the beginning of the Kojak filesystem image.</font></p>
+<p><font face="Verdana">Here's the script used to bring up the network:</font></p>
+<blockquote>
+  <p><font face="Verdana">slay dhcp.client io-net<br>
+  io-net -ddaisy -pttcpip -p pppmgr &amp;<br>
+  sleep 4<br>
+  dhcp.client &amp;</font></p>
+</blockquote>
+<p><font face="Verdana">This is a mangled string from the startup script that is
+used to start the filesystem:</font></p>
+<blockquote>
+<p><font face="Verdana">devf-kojak -r -t1 -w4096 -m/ ??2/dev/fs0p1<br>
+<br>
+<i>Update:</i> The startup command is devf-kojak -r -t1 -w4096 -m/ and the other
+part means &quot;wait for /dev/fs0p1 to appear before continuing.&quot; It's a
+binary script so the question marks don't mean anything to a human.</font></p>
+</blockquote>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>Analysis of the files in the Kojak image</b></font>
+
+</p>
+<p><font face="Verdana">Many of the files are encoded in a custom LZO-based
+format. LZO is a compression algorithm whose claim to fame is decompression
+speed and low usage of computing resources. It doesn't compress very well, which
+explains why there are still lots of visible strings in the Kojak image (it also
+explains why there's occasional corruption of those strings -- that's the
+compression at work!). The files that start with F3S_FLZO are compressed with
+this algorithm.</font></p>
+<p><font face="Verdana"><i>Update:</i> This is just plain old QNX flashlzo
+format.</font></p>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+</font><font face="Verdana"><b>Geode chipset research</b></font></p>
+<ul>
+  <li><font face="Verdana">The <a href="http://www.national.com/">National
+    Semiconductor</a> <a href="http://www.national.com/appinfo/solutions/0,2062,396,00.html">Geode</a>
+    is a descendant of the Cyrix MediaGX CPU.</font></li>
+  <li><font face="Verdana">The Audrey contains the <a href="http://www.national.com/pf/CS/CS5530A.html">CS5530
+    South Bridge</a> that provides quite a bit of functionality: video output
+    that drives a VGA monitor, TFT panel, or NTSC/PAL video; two IDE controllers
+    with support for up to four IDE devices (hmmm, so is a hard drive possible
+    after all?); two Open Host Controller Interface (OHCI) USB ports.</font></li>
+  <li><font face="Verdana">The <a href="http://www.national.com/pf/CS/CS9211.html">CS9211</a>
+    flat panel display controller drives the LCD. I don't know where the
+    touchscreen part of it comes in.</font></li>
+  <li><font face="Verdana">The <a href="http://www.national.com/pf/PC/PC97317.html">PC97317</a>
+    I/O chip provides a floppy disk controller, a keyboard and mouse controller,
+    Plug and Play happiness, a battery-backed clock (huh? so why does the Audrey
+    always forget the date and time when you unplug it?), ACPI power management,
+    serial ports, an IrDA interface, and a parallel port.</font></li>
+</ul>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>Linux on the Audrey?</b>
+</font></p>
+<p><font face="Verdana">Yes, it's quite possible. But there are some caveats. The IPL (Image
+Program Loader), which lives in the top
+64K of linear memory (0xff000000), will load an appropriately-formatted CF image
+into memory, update the flash memory, and upon a normal rebooting,
+execute code at the beginning of the flash memory. However, the IPL expects a
+proper QNX IFS at the bottom of the CF image, and the IFS must be less than
+512KB, because the Audrey filesystem starts at 0x00080000 in the image (I have
+seen hints that the flash memory is loaded at 0x40000000 in memory, so the
+Audrey filesystem is probably memory-mapped to 0x40080000). So that
+leaves us with three options:</font></p>
+<ol>
+  <li><font face="Verdana">Stick with QNX -- not a bad idea because it's a
+    really cool OS! I like microkernels!</font></li>
+  <li><font face="Verdana">Trick the IPL into thinking that LILO at the bottom
+    of the image is really a QNX IPL. Although that's not a bad idea, it means
+    that we can't just drop <a href="http://jailbait.sourceforge.net/">Jailbait</a>,
+    <a href="http://midori.transmeta.com/">Midori</a>, or any other standard
+    Linux distribution onto the Audrey. There will always be an IPL/QNX bias in
+    the Audrey.</font></li>
+  <li><font face="Verdana">Do a two-step upgrade process: first, flash the
+    Audrey with a CF image that has a lobotomized IPL and a standard Audrey
+    distribution in the bottom of the image (which will be loaded by the
+    standard IPL), and then flash the lobotomized Audrey with plain old
+    Jailbait. Personally, I prefer this option because it's a hassle just once,
+    and then it'll be easier to hack, hack, hack after that. But modifying the
+    IPL will be pretty scary, because if I get it wrong, goodbye Audrey.</font></li>
+</ol>
+<p><font face="Verdana">Only after figuring this out will I be able to find out
+exactly how close this particular Geode platform is to a plain old AT PC.</font></p>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+ <b>Using the Audrey</b></font></p>
+<ul>
+  <li><font face="Verdana">Hitting shift-snapshot in the browser cycles through
+    font sizes. Nice if you come across a page that is hard to read or doesn't
+    fit nicely in the screen.</font></li>
+</ul>
+<p><font size="2" face="Verdana"><img border="0" src="ys_scroll_normal_down.gif" width="43" height="35">
+</font><font face="Verdana"><b>Just for fun</b></font></p>
+<p><font face="Verdana">Pulled out the <a href="sleep.wav">&quot;go to
+sleep&quot; sound</a>. Plays OK (though quietly) on a Windows machine.</font></p>
+<hr>
+</font>
+
+<p align="right"><font face="Verdana" size="2"><i>This page is maintained by
+Sowbug &lt;mike @ this domain&gt;</i></font></p>
+
+</body>
+
+</html>

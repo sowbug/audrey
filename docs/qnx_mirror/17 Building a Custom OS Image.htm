@@ -1,0 +1,495 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0102)http://www.google.com/search?q=cache:pcXrHvE3LWw:staff.qnx.com/~docs/buildos.html+source+qnx+ipl&hl=en -->
+<HTML><HEAD><TITLE>17 Building a Custom OS Image</TITLE>
+<META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+<META content="MSHTML 5.00.2920.0" name=GENERATOR></HEAD>
+<BODY aLink=#0000cc background="" bgColor=#ffffff link=#3366cc text=#000000 
+vLink=#9999cc>
+<TABLE border=1 width="100%">
+  <TBODY>
+  <TR>
+    <TD>
+      <TABLE bgColor=#ffffff border=1 cellPadding=10 cellSpacing=0 width="100%" 
+      color="#ffffff">
+        <TBODY>
+        <TR>
+          <TD><FONT color=black face=arial,sans-serif size=-1>This is <B><FONT 
+            color=#0039b6>G</FONT> <FONT color=#c41200>o</FONT> <FONT 
+            color=#f3c518>o</FONT> <FONT color=#0039b6>g</FONT> <FONT 
+            color=#30a72f>l</FONT> <FONT color=#c41200>e</FONT></B>'s <A 
+            href="http://www.google.com/help/features.html#cached"><FONT 
+            color=blue>cache</FONT></A> of <A 
+            href="http://staff.qnx.com/~docs/buildos.html"><FONT 
+            color=blue>http://staff.qnx.com/~docs/buildos.html</FONT></A>.<BR><B><FONT 
+            color=#0039b6>G</FONT> <FONT color=#c41200>o</FONT> <FONT 
+            color=#f3c518>o</FONT> <FONT color=#0039b6>g</FONT> <FONT 
+            color=#30a72f>l</FONT> <FONT color=#c41200>e</FONT></B>'s cache is 
+            the snapshot that we took of the page as we crawled the web.<BR>The 
+            page may have changed since that time. Click here for the <A 
+            href="http://staff.qnx.com/~docs/buildos.html"><FONT 
+            color=blue>current page</FONT></A> without 
+            highlighting.</FONT><BR><BR>
+            <CENTER><FONT color=black size=-2><I>Google is not affiliated with 
+            the authors of this page nor responsible for its 
+            content.</I></FONT></CENTER></TD></TR>
+        <TR>
+          <TD>
+            <TABLE border=0 cellPadding=0 cellSpacing=0>
+              <TBODY>
+              <TR>
+                <TD><FONT color=black face=arial,sans-serif size=-1>These 
+                  search terms have been highlighted:&nbsp;</FONT></TD>
+                <TD bgColor=#ffff66><B><FONT color=black face=arial,sans-serif 
+                  size=-1>source&nbsp;</FONT></B></TD>
+                <TD bgColor=#a0ffff><B><FONT color=black face=arial,sans-serif 
+                  size=-1>qnx&nbsp;</FONT></B></TD>
+                <TD bgColor=#99ff99><B><FONT color=black face=arial,sans-serif 
+                  size=-1>ipl&nbsp;</FONT></B></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<HR>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<META content="Quadralay WebWorks Publisher Standard Edition 6.0.2" 
+name=GENERATOR>
+<META content=Sysadmin name=TEMPLATEBASE>
+<META content="04/04/01 15:10:43" name=LASTUPDATED>
+<TABLE align=right border=0 cellPadding=0 cellSpacing=0 width=331>
+  <TBODY>
+  <TR>
+    <TD><A href="http://staff.qnx.com/~docs/Book4TOC2.html"><IMG alt=TOC 
+      border=0 height=23 src="" width=84> </A></TD>
+    <TD><A href="http://staff.qnx.com/~docs/recovery.html"><IMG alt=PREV 
+      border=0 height=23 src="" width=81> </A></TD>
+    <TD><A href="http://staff.qnx.com/~docs/otherfilesys.html"><IMG alt=NEXT 
+      border=0 height=23 src="" width=81> </A></TD>
+    <TD><A href="http://staff.qnx.com/~docs/Book4IX.html"><IMG alt=INDEX 
+      border=0 height=23 src="" width=85> </A></TD></TR></TBODY></TABLE>
+<P><IMG alt="QNX Logo" height=70 src="" width=180></P>
+<HR align=left>
+
+<BLOCKQUOTE>
+  <H2><A name=997836></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">17 Building a Custom OS Image 
+  </FONT></H2>
+  <P><A name=1000892></A><FONT face="Verdana, Arial, Helvetica, sans-serif">This 
+  chapter covers the following topics: </FONT></P>
+  <UL><FONT face="Verdana, Arial, Helvetica, sans-serif">
+    <LI><A name=1000900></A><A 
+    href="http://staff.qnx.com/~docs/buildos.html#1003595">Introduction</A></FONT> 
+    <FONT face="Verdana, Arial, Helvetica, sans-serif">
+    <LI><A name=1000905></A><A 
+    href="http://staff.qnx.com/~docs/buildos.html#1025171">Constructing a 
+    buildfile</A></FONT> <FONT face="Verdana, Arial, Helvetica, sans-serif">
+    <LI><A name=1000910></A><A 
+    href="http://staff.qnx.com/~docs/buildos.html#997755">Where to find 
+    modules</A></FONT> <FONT face="Verdana, Arial, Helvetica, sans-serif">
+    <LI><A name=1003519></A><A 
+    href="http://staff.qnx.com/~docs/buildos.html#997777">Selecting processes 
+    for an image</A></FONT> </LI></UL>
+  <H3><A name=1003525></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">Information to be added</FONT> 
+  </H3>
+  <P><A name=1003533></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I><B>[Author's Comments: 
+  </B></I></FONT><FONT face="Verdana, Arial, Helvetica, sans-serif"><I>(@@What 
+  are the differences between disk, network, and embedded 
+  images?)</I></FONT><FONT face="Verdana, Arial, Helvetica, sans-serif"><I><B>] 
+  </B></I></FONT></FONT></P>
+  <P><A name=1003585></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I><B>[Author's Comments: 
+  </B></I></FONT><FONT face="Verdana, Arial, Helvetica, sans-serif"><I>(@@how do 
+  the config files get written?)--buildfile does it? how? where is .ifs file 
+  (for dumpifs)--It only exists on a Windows-based install, look at the file 
+  /fs/hd0-dos/config.sys (in my install it's in /fs/hd0-dos/Program Files/<B 
+  style="BACKGROUND-COLOR: #a0ffff; COLOR: black">qnx</B>/boot/fs/qnxbase.ifs 
+  and .../qnxbasedma.ifs). (add in building OS chapter)</I></FONT><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I><B>] 
+</B></I></FONT></FONT></P>
+  <P><A name=1003590></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I><B>[Author's Comments: 
+  </B></I></FONT><FONT face="Verdana, Arial, Helvetica, sans-serif"><I>(@@add a 
+  section on using Photon and Nto on an embedded device? (checkout 
+  http://staff.<B 
+  style="BACKGROUND-COLOR: #a0ffff; COLOR: black">qnx</B>.com/~cforan/embed.html)</I></FONT><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I><B>] 
+</B></I></FONT></FONT></P>
+  <P><A name=1003575></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"></FONT></P>
+  <H3><A name=1003595></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">Introduction</FONT> </H3>
+  <P><A name=1025543></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">Building a custom OS image is a 
+  large subject covered in detail in a separate book (see <FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I><A 
+  href="http://support.qnx.com/support/docs/neutrino_qrp/building/index.html">Building 
+  Embedded Systems</A></I></FONT>). In this chapter, we will take a brief look 
+  at making a Neutrino image. In the embedded Neutrino world, an <FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I>image</I></FONT> can mean a 
+  Neutrino image or a flash filesystem image.</FONT> </P>
+  <H4><A name=1025477></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">What is a Neutrino image?</FONT> 
+  </H4>
+  <P><A name=1019957></A><FONT face="Verdana, Arial, Helvetica, sans-serif">A 
+  Neutrino image is simply a bootable or nonbootable directory structure that 
+  contains files. The files include the OS, your executables, and any data files 
+  that might be related to your programs. The bootable Neutrino image is created 
+  by a program called <TT>mkifs</TT> (make image file system), which accepts 
+  information from two main sources: its command line and a <FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I>buildfile</I></FONT>.</FONT> 
+  </P>
+  <H4><A name=1020098></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">What is a flash filesystem 
+  image?</FONT> </H4>
+  <P><A name=1025158></A><FONT face="Verdana, Arial, Helvetica, sans-serif">A 
+  flash filesystem image is a structure that can be used in a read-only, 
+  read/write, or read/write/reclaim flash filesystem created by the 
+  <TT>mkefs</TT> utility.</FONT> </P>
+  <P><A name=1025503></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"></FONT></P>
+  <H3><A name=1025171></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">Constructing a buildfile</FONT> 
+  </H3>
+  <P><A name=1025198></A><FONT face="Verdana, Arial, Helvetica, sans-serif">A 
+  buildfile is the file that contains instructions for making an image.</FONT> 
+  </P>
+  <H4><A name=1025452></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">The mkifs utility</FONT> </H4>
+  <P><A name=1025221></A><FONT face="Verdana, Arial, Helvetica, sans-serif">The 
+  <TT>mkifs</TT> utility is used to create a Neutrino image filesystem from a 
+  buildfile specification. 
+  <TABLE border=1 cellPadding=5 cellSpacing=0>
+    <CAPTION><B><I><FONT 
+    face="Verdana, Arial, Helvetica, sans-serif"></FONT></I></B></CAPTION>
+    <TBODY>
+    <TR>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025214></A><FONT face="Verdana, Arial, Helvetica, sans-serif">
+        <DIV align=center><IMG src=""> </DIV><BR></FONT></FONT></TD>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025217></A><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif">Currently, you can use 
+        <TT>mkifs</TT> to create only bootable 
+    images<BR></FONT></FONT></TD></TR></TBODY></TABLE></FONT></P>
+  <P><A name=1025225></A><FONT face="Verdana, Arial, Helvetica, sans-serif">The 
+  syntax is:</FONT> </P><PRE><FONT face="Courier New">mkifs [-l inputline] [-v] [buildfile [imagefile]]</FONT><A name=1025230> </A>
+</PRE>
+  <P><A name=1025343></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">where: 
+  <TABLE border=1 cellPadding=5 cellSpacing=0>
+    <CAPTION><B><I><FONT 
+    face="Verdana, Arial, Helvetica, sans-serif"></FONT></I></B></CAPTION>
+    <TBODY>
+    <TR align=middle bgColor=#cccccc>
+      <TH><FONT color=#003366 face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025235></A><FONT face="Verdana, Arial, Helvetica, sans-serif">This 
+        component:<BR></FONT></FONT></TH>
+      <TH><FONT color=#003366 face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025238></A><FONT face="Verdana, Arial, Helvetica, sans-serif">Does 
+        this:<BR></FONT></FONT></TH></TR>
+    <TR>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025250></A><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><TT><B>-l</B></TT></FONT> 
+        <FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><I><B>inputline</B></I></FONT><BR></FONT></FONT></TD>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025261></A><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif">Makes <TT>mkifs</TT> 
+        process the <FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><I><B>inputline</B></I></FONT> 
+        before it starts interpreting the buildfile. Input lines given to 
+        <TT>mkifs</TT> must be quoted to prevent interpretation by the shell 
+        (especially since <TT>mkifs</TT> input lines often contain spaces). 
+        Multiple <FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><TT><B>-l</B></TT></FONT> 
+        options are processed in the order specified.<BR></FONT></FONT></TD></TR>
+    <TR>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025281></A><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><TT><B>-v</B></TT></FONT><BR></FONT></FONT></TD>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025288></A><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif">Requires <TT>mkifs</TT> to 
+        operate verbosely. Specifying additional <FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><TT><B>-v</B></TT></FONT> 
+        options increases verbosity<BR></FONT></FONT></TD></TR>
+    <TR>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025300></A><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><I><B>buildfile</B></I></FONT><BR></FONT></FONT></TD>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025307></A><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif">Specifies the input 
+        buildfile that <TT>mkifs</TT> should use to construct the image; use 
+        <FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><TT><B>-</B></TT></FONT> to 
+        specify standard input (the default). <BR></FONT></FONT></TD></TR>
+    <TR>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025319></A><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><I><B>imagefile</B></I></FONT><BR></FONT></FONT></TD>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025326></A><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif">Specifies the file to 
+        contain the image that <TT>mkifs</TT> builds; use <FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><TT><B>-</B></TT></FONT> to 
+        specify standard output (the default). Note that <FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><I><B>imagefile</B></I></FONT> 
+        can be specified only if <FONT 
+        face="Verdana, Arial, Helvetica, sans-serif"><I><B>buildfile</B></I></FONT> 
+        has been specified.<BR></FONT></FONT></TD></TR></TBODY></TABLE></FONT></P>
+  <H5><A name=1025355></A><I><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">The dumpifs utility</FONT></I> 
+  </H5>
+  <P><A name=1025363></A><FONT face="Verdana, Arial, Helvetica, sans-serif">The 
+  <TT>dumpifs</TT> utility dumps the contents of an image filesystem. It can 
+  also be used to extract files from the image filesystem.</FONT> </P>
+  <H4><A name=1025372></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">Buildfile format</FONT> </H4>
+  <P><A name=1024792></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">Let's look at a very simple 
+  buildfile called <TT>shell.bld</TT>:</FONT> </P><PRE><FONT face="Courier New">#   A simple "ls", "cat", and shell.
+#   This file is "shell.bld"
+
+[virtual=mipsle,srec] .bootstrap = {
+   startup-vr41xx
+   PATH=/proc/boot procnto
+}
+[+script] .script = {
+   devc-ser8250 -e -b38400 0x1600ffc0^1,0x80010007 &amp;amp;
+   reopen
+   [+session] PATH=:/proc/boot esh 
+}
+
+[type=link] /dev/console=/dev/ser1
+[type=link] /usr/lib/ldqnx.so.1=/proc/boot/libc.so
+
+libc.so 
+
+[data=copy]
+devc-ser8250
+esh
+ls
+cat
+data1
+data2</FONT><A name=1024796> </A>
+</PRE>
+  <P><A name=1024798></A><FONT face="Verdana, Arial, Helvetica, sans-serif">In a 
+  buildfile, a pound sign (#) indicates a comment; anything between it and the 
+  end of the line is ignored. Make sure there's a space between a buildfile 
+  command and the pound sign. Although the three sections in the buildfile above 
+  seem to be distinct, in reality all three are similar in that they're lists of 
+  files.</FONT> </P>
+  <P><A name=1024804></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">Notice also how the buildfile 
+  itself is structured:</FONT> </P><A name=1024816></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I>optional_attributes filename 
+  optional_contents</I></FONT><BR></FONT>
+  <P><A name=1024818></A><FONT face="Verdana, Arial, Helvetica, sans-serif">For 
+  example, this bit of code:</FONT> </P><PRE><FONT face="Courier New">[virtual=mipsle,srec] .bootstrap = {
+   startup-vr41xx
+   PATH=/proc/boot procnto
+}
+</FONT><A name=1024825> </A>
+</PRE>
+  <P><A name=1024827></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">Specifies these elements:</FONT> 
+  </P><A name=1024843></A><FONT face="Verdana, Arial, Helvetica, sans-serif">· 
+  <FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I>optional_attribute</I></FONT> 
+  is <TT>[virtual=mipsle,srec]</TT><BR></FONT><A name=1024856></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">· <FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I>filename</I></FONT> is 
+  <TT>.bootstrap</TT><BR></FONT><A name=1024868></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">· <FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I>optional_contents</I></FONT> 
+  start at <TT>= {</TT> and end at the corresponding closing brace three lines 
+  down.<BR></FONT>
+  <P><A name=1024882></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">Let's examine the three parts of 
+  the buildfile in some detail (see <FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I><A 
+  href="http://support.qnx.com/support/docs/neutrino_qrp/building/index.html">Building 
+  Embedded Systems</A></I></FONT> for more information on <TT>mkifs</TT>, the 
+  utility used to build a Neutrino image filesystem).</FONT> </P>
+  <P><A name=1024893></A><FONT face="Verdana, Arial, Helvetica, sans-serif">In 
+  the first part of the buildfile:</FONT> </P><PRE><FONT face="Courier New">[virtual=mipsle,srec] .bootstrap = {
+   startup-vr41xx
+   PATH=/proc/boot procnto
+}
+</FONT><A name=1024897> </A>
+</PRE>
+  <P><A name=1024903></A><FONT face="Verdana, Arial, Helvetica, sans-serif">The 
+  <FONT face="Verdana, Arial, Helvetica, sans-serif"><I>optional 
+  attributes</I></FONT> specify that we are building a virtual address system 
+  using a little-endian MIPS CPU, with <TT>srec.boot</TT> as the name of the 
+  boot prefix, a small piece of code that is executed after the <B 
+  style="BACKGROUND-COLOR: #99ff99; COLOR: black">IPL</B> and before the startup 
+  program. The attributes refer to an inline file to be included in the image, 
+  named <TT>.bootstrap</TT>. This file will contain the startup utility 
+  responsible for initializing <TT>NEC Vr41</TT> type evaluation boards and 
+  <TT>procnto</TT>, the Neutrino microkernel and process manager. The <B 
+  style="BACKGROUND-COLOR: #99ff99; COLOR: black">IPL</B> will transfer control 
+  to the startup program and process manager when the system starts up.</FONT> 
+  </P>
+  <P><A name=1024916></A><FONT face="Verdana, Arial, Helvetica, sans-serif">The 
+  second part: </FONT></P><PRE><FONT face="Courier New">[+script] .script = {
+   devc-ser8250 -e -b38400 0x1600ffc0^1,0x80010007 &amp;amp;
+   reopen
+   [+session] PATH=:/proc/boot esh 
+}
+</FONT><A name=1024920> </A>
+</PRE>
+  <P><A name=1024925></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">Specifies another inline file to 
+  be included in the image, this time a script file named .<TT>script to be run 
+  after the process manager has started.</TT> This script will contain the 
+  following specified command lines which will set up several options to be used 
+  by the serial driver for an 8250-compatible UART, then redirect standard 
+  input, output, and error to the console; and finally make the embedded shell 
+  program a session leader.</FONT> </P>
+  <P><A name=1025115></A><FONT face="Verdana, Arial, Helvetica, sans-serif">
+  <TABLE border=1 cellPadding=5 cellSpacing=0>
+    <CAPTION><B><I><FONT 
+    face="Verdana, Arial, Helvetica, sans-serif"></FONT></I></B></CAPTION>
+    <TBODY>
+    <TR>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025108></A><FONT face="Verdana, Arial, Helvetica, sans-serif">
+        <DIV align=center><IMG src=""> </DIV><BR></FONT></FONT></TD>
+      <TD><FONT face="Verdana, Arial, Helvetica, sans-serif"><A 
+        name=1025111></A><FONT 
+        face="Verdana, Arial, Helvetica, sans-serif">These script files stored 
+        on the target are not like regular <B 
+        style="BACKGROUND-COLOR: #a0ffff; COLOR: black">QNX</B> 6 script files, 
+        they have been parsed before they are included in the image. This is to 
+        make start up quicker by running them as stand alone programs, avoiding 
+        the need to run a shell interpreter 
+    first.<BR></FONT></FONT></TD></TR></TBODY></TABLE></FONT></P>
+  <P><A name=1024932></A><FONT face="Verdana, Arial, Helvetica, sans-serif">The 
+  last part of the buildfile:</FONT> </P><PRE><FONT face="Courier New">[type=link] /dev/console=/dev/ser1
+[type=link] /usr/lib/ldqnx.so.1=/proc/boot/libc.so
+
+libc.so 
+
+[data=copy]
+devc-ser8250
+esh
+ls
+cat
+data1
+data2</FONT><A name=1024939> </A>
+</PRE>
+  <P><A name=1024945></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">Creates two symbolic links, 
+  specifies an external shared library object to include in the image, and 
+  causes data for the executable programs to be copied to RAM before use. The 
+  last six lines include six external files to be included in the image. The 
+  <TT>mkifs</TT> utility will find the external files on the host in a path 
+  specified by the <FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><B>MKIFS_PATH</B></FONT> 
+  environment variable. By default, the utility places all files to be included 
+  in the image in the <TT>/proc/boot/</TT> directory in the image. </FONT></P>
+  <P><A name=1024950></A><FONT face="Verdana, Arial, Helvetica, sans-serif">In 
+  effect, then, our buildfile simply specifies nine files - two inline files and 
+  seven external.</FONT> </P>
+  <P><A name=1024952></A><FONT face="Verdana, Arial, Helvetica, sans-serif">Now 
+  we have the buildfile, we can make the image file by typing this:</FONT> </P><PRE><FONT face="Courier New">mkifs shell.bld shell.ifs</FONT><A name=1024960> </A>
+</PRE>
+  <H4><A name=1024971></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">Setting heap sizes</FONT> </H4>
+  <P><A name=1024981></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I><B>[Author's Comments: 
+  </B></I></FONT><FONT face="Verdana, Arial, Helvetica, sans-serif"><I>(@@Do I 
+  need to set heap sizes and priorities? Why? (see 
+  /usr/help/product/neutrino_qrp_en/buil\dling/building_nto.html) or 
+  http://support.<B 
+  style="BACKGROUND-COLOR: #a0ffff; COLOR: black">qnx</B>.com/support/docs/neutrino_qrp/technotes/hat.html 
+  )</I></FONT><FONT face="Verdana, Arial, Helvetica, sans-serif"><I><B>] 
+  </B></I></FONT></FONT></P>
+  <H4><A name=1024993></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">Setting priorities</FONT> </H4>
+  <H4><A name=997750></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif"></FONT></H4>
+  <H3><A name=997755></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">Where to find modules</FONT> 
+</H3>
+  <P><A name=1025595></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">Let's assume that one of the 
+  files you want to include in your image is actually stored on your development 
+  system as <TT>/release/data1</TT>. If you simply put <TT>/release/data1</TT> 
+  in the buildfile, <TT>mkifs</TT> would include the file in the image, but 
+  would call it <TT>/proc/boot/data1</TT> on the target system, instead of 
+  <TT>/release/data1</TT>. </FONT></P>
+  <P><A name=1025598></A><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif">Sometimes this is exactly what 
+  you want. But at other times you may want to specify the exact pathname on the 
+  target (i.e. you may wish to override the prefix of<TT> /proc/boot</TT>). For 
+  example, specifying <TT>/etc/passwd</TT> would place the host filesystem's 
+  <TT>/etc/passwd</TT> file in the target's pathname space as 
+  <TT>/proc/boot/passwd</TT>: probably not what you intended. </FONT></P>
+  <P><A name=1025603></A><FONT face="Verdana, Arial, Helvetica, sans-serif">To 
+  get around this, if you include the line: </FONT></P><PRE><FONT face="Courier New">/etc/passwd = /etc/passwd</FONT><A name=1025605> </A>
+</PRE>
+  <P><A name=1025608></A><FONT face="Verdana, Arial, Helvetica, sans-serif">in 
+  your buildfile, this would tell <TT>mkifs</TT> that the file 
+  <TT>/etc/passwd</TT> on the host should be stored as <TT>/etc/passwd</TT> on 
+  the target.</FONT> </P>
+  <P><A name=1025610></A><FONT face="Verdana, Arial, Helvetica, sans-serif">If 
+  you wanted a different <B 
+  style="BACKGROUND-COLOR: #ffff66; COLOR: black">source</B> file (let's say 
+  <TT>/home/joe/embedded/passwd</TT>) to be the password file for the embedded 
+  system, you would include the buildfile code:</FONT> </P><PRE><FONT face="Courier New">/etc/passwd = /home/joe/embedded/passwd</FONT><A name=1025871> </A>
+</PRE>
+  <H3><A name=997777></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">Selecting processes for an 
+  image</FONT> </H3>
+  <P><A name=997789></A><FONT face="Verdana, Arial, Helvetica, sans-serif"><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I><B>[Author's Comments: 
+  </B></I></FONT><FONT face="Verdana, Arial, Helvetica, sans-serif"><I>(@@What 
+  does it mean to select processes for an image? How do I do 
+  it?)</I></FONT><FONT face="Verdana, Arial, Helvetica, sans-serif"><I><B>] 
+  </B></I></FONT></FONT></P>
+  <H4><A name=997799></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">Mandatory processes</FONT> </H4>
+  <P><A name=997811></A><FONT face="Verdana, Arial, Helvetica, sans-serif"><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I><B>[Author's Comments: 
+  </B></I></FONT><FONT face="Verdana, Arial, Helvetica, sans-serif"><I>(@@What 
+  are the mandatory processes?)</I></FONT><FONT 
+  face="Verdana, Arial, Helvetica, sans-serif"><I><B>] 
+</B></I></FONT></FONT></P>
+  <H4><A name=997821></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif">Disk, network, and embedded 
+  images</FONT> </H4>
+  <H4><A name=1000942></A><FONT color=#003366 
+  face="Verdana, Arial, Helvetica, sans-serif"></FONT></H4></BLOCKQUOTE>
+<HR>
+
+<TABLE align=right border=0 cellPadding=0 cellSpacing=0>
+  <TBODY>
+  <TR>
+    <TD align=right><FONT size=2><B 
+      style="BACKGROUND-COLOR: #a0ffff; COLOR: black">QNX</B> Software Systems 
+      Ltd.<BR>http://www.<B 
+      style="BACKGROUND-COLOR: #a0ffff; COLOR: black">qnx</B>.com<BR>Voice: +1 
+      613 591 0931<BR>Fax: +1 613 591 3579<BR><A 
+      href="mailto:info@qnx.com">info@<B 
+      style="BACKGROUND-COLOR: #a0ffff; COLOR: black">qnx</B>.com</A><BR></FONT></TD></TR></TBODY></TABLE>
+<TABLE border=0 cellPadding=0 cellSpacing=0 width=331>
+  <TBODY>
+  <TR>
+    <TD><A href="http://staff.qnx.com/~docs/Book4TOC2.html"><IMG alt=TOC 
+      border=0 height=23 src="" width=84> </A></TD>
+    <TD><A href="http://staff.qnx.com/~docs/recovery.html"><IMG alt=PREV 
+      border=0 height=23 src="" width=81> </A></TD>
+    <TD><A href="http://staff.qnx.com/~docs/otherfilesys.html"><IMG alt=NEXT 
+      border=0 height=23 src="" width=81> </A></TD>
+    <TD><A href="http://staff.qnx.com/~docs/Book4IX.html"><IMG alt=INDEX 
+      border=0 height=23 src="" width=85> </A></TD></TR></TBODY></TABLE></BODY></HTML>
