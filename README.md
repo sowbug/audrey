@@ -1,7 +1,8 @@
 audrey
 --
 
-A circa-2001 project to open up the 3Com Audrey internet appliance.
+A circa-2001 project to open up the
+[3Com Audrey internet appliance](https://en.wikipedia.org/wiki/3Com_Audrey).
 
 As far as I know, I'm the one who hacked this first, though I'm sure
 someone else would have done it eventually. In the summer of 2001, I was
